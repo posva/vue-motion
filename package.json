@@ -3,5 +3,7 @@
   "version": "0.0.0",
   "description": "Animate your state and props",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "git@github.com:posva/vue-motion.git",
+  "author": "Eduardo San Martin Morote <posva13@gmail.com>"
 }
