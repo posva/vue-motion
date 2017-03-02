@@ -1,0 +1,7 @@
+{
+  "name": "vue-motion",
+  "version": "0.0.0",
+  "description": "Animate your state and props",
+  "main": "index.js",
+  "license": "MIT"
+}
