@@ -13,10 +13,19 @@ export default {
     }
   },
 
-  props: ['value', 'tag'],
+  props: {
+    value: {
+      type: Number,
+    },
+    tag: {
+      type: String,
+      default: 'span',
+    },
+    spring: Object,
+  },
 
   render (h) {
-    return h(this.tag || 'span', [
+    return h(this.tag, [
       this.$scopedSlots.default({
         value: this.currentValue,
       }),
@@ -35,9 +44,9 @@ export default {
           this.currentValue,
           this.currentVelocity,
           this.value,
-          s.stiffness,
-          s.damping,
-          s.precision
+          this.spring.stiffness,
+          this.spring.damping,
+          this.spring.precision
         )
         this.animate()
       })
