@@ -32,14 +32,40 @@ export default {
     ])
   },
 
+  watch: {
+    value (old, current) {
+      if (old !== current && !this.wasAnimating) {
+        this.prevTime = performance.now()
+        this.animate()
+      }
+    }
+  },
+
   mounted () {
+    this.currentValue = this.value
     this.animate()
   },
 
   methods: {
     animate () {
-      requestAnimationFrame(() => {
-        [this.currentValue, this.currentVelocity] = stepper(
+      this.animationId = requestAnimationFrame(timestamp => {
+        if (shouldStopAnimation(
+          this.currentValue,
+          this.value,
+          this.currentVelocity
+        )) {
+          if (this.wasAnimating) this.$emit('motion-end')
+
+          // reset everything for next animation
+          this.animationId = null
+          this.wasAnimating = false
+          return
+        }
+
+        if (!this.wasAnimating) this.$emit('motion-start')
+        this.wasAnimating = true
+
+        ;[this.currentValue, this.currentVelocity] = stepper(
           msPerFrame / 1000,
           this.currentValue,
           this.currentVelocity,
@@ -48,9 +74,20 @@ export default {
           this.spring.damping,
           this.spring.precision
         )
+
         this.animate()
       })
     },
   },
+}
+
+function shouldStopAnimation(currentValue, value, currentVelocity) {
+  if (currentVelocity !== 0) return false
+
+  // stepper will have already taken care of rounding precision errors, so
+  // won't have such thing as 0.9999 !=== 1
+  if (currentValue !== value) return false
+
+  return true;
 }
 </script>
