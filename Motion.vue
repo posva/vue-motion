@@ -53,7 +53,7 @@ export default {
 
   methods: {
     animate () {
-      this.animationId = requestAnimationFrame(timestamp => {
+      this.animationId = requestAnimationFrame(() => {
         if (shouldStopAnimation(
           this.currentValue,
           this.value,
@@ -71,7 +71,7 @@ export default {
         this.wasAnimating = true
 
         // get time from last frame
-        const currentTime = timestamp || performance.now()
+        const currentTime = performance.now()
         const timeDelta = currentTime - this.prevTime
         this.prevTime = currentTime
         this.accumulatedTime += timeDelta
