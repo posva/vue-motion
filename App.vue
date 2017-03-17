@@ -9,16 +9,17 @@
       <template scope="values">
         <span>Value is</span>
         <pre>{{ values }}</pre>
-        <div style="width: 100%">
-          <input disabled style="width: 100%" min="-30" :max="30 + max" type="range" :value="values.value"/>
+        <div class="demo-container">
+          <div class="demo"
+               :style="{transform: `translate3d(${values.value}px, 0, 0)`}"
+          ></div>
         </div>
-        <div class="demo"
-             :style="{transform: `translate3d(${values.value}px, 0, 0)`}"
-        ></div>
       </template>
     </Motion>
 
     <input v-model.number="n" step="10" type="number" />
+    <br/>
+    <button @click="toggle">Toggle</button>
     <br/>
     <label>
       Stiffness
@@ -62,15 +63,12 @@ export default {
     }
   },
 
-  created () {
-    setInterval(() => {
+  methods: {
+    toggle () {
       this.n = this.n < this.max / 2
              ? this.max
              : 0
-    }, 2000)
-  },
-
-  methods: {
+    },
     setSpring (config) {
       this.config = config
       this.config.precision = this.config.precision || 0.01
@@ -99,6 +97,10 @@ export default {
   width: 100px;
   height: 100px;
   background-color: crimson;
+}
+.demo-container {
   margin-left: 30px;
+  width: 500px;
+  background-color: ghostwhite;
 }
 </style>
