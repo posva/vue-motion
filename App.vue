@@ -12,6 +12,9 @@
         <div style="width: 100%">
           <input disabled style="width: 100%" min="-30" :max="30 + max" type="range" :value="values.value"/>
         </div>
+        <div class="demo"
+             :style="{transform: `translate3d(${values.value}px, 0, 0)`}"
+        ></div>
       </template>
     </Motion>
 
@@ -31,11 +34,14 @@
       Precision
       <input v-model.number="config.precision" step="0.01" type="number"/>
     </label>
+    <br/>
+    <button v-for="(preset, name) in presets" @click="setSpring(preset)">{{ name }}</button>
   </div>
 </template>
 
 <script>
 import Motion from './Motion.vue'
+import presets from './presets'
 
 export default {
   data () {
@@ -50,6 +56,12 @@ export default {
     }
   },
 
+  computed: {
+    presets () {
+      return presets
+    }
+  },
+
   created () {
     setInterval(() => {
       this.n = this.n < this.max / 2
@@ -59,6 +71,10 @@ export default {
   },
 
   methods: {
+    setSpring (config) {
+      this.config = config
+      this.config.precision = this.config.precision || 0.01
+    },
     start () {
       console.log('---------')
       console.log('Start')
@@ -77,3 +93,12 @@ export default {
   components: { Motion }
 }
 </script>
+
+<style>
+.demo {
+  width: 100px;
+  height: 100px;
+  background-color: crimson;
+  margin-left: 30px;
+}
+</style>
