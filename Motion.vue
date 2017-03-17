@@ -36,6 +36,7 @@ export default {
     value (old, current) {
       if (old !== current && !this.wasAnimating) {
         this.prevTime = performance.now()
+        this.accumulatedTime = 0
         this.animate()
       }
     }
@@ -43,6 +44,10 @@ export default {
 
   mounted () {
     this.currentValue = this.value
+    this.prevTime = performance.now()
+    this.accumulatedTime = 0
+    this.idealValue = this.currentValue
+    this.idealVelocity = this.currentVelocity
     this.animate()
   },
 
@@ -65,16 +70,70 @@ export default {
         if (!this.wasAnimating) this.$emit('motion-start')
         this.wasAnimating = true
 
-        ;[this.currentValue, this.currentVelocity] = stepper(
+        // get time from last frame
+        const currentTime = timestamp || performance.now()
+        const timeDelta = currentTime - this.prevTime
+        this.prevTime = currentTime
+        this.accumulatedTime += timeDelta
+
+        // more than 10 frames? prolly switched browser tab. Restart
+        if (this.accumulatedTime > msPerFrame * 10) {
+          this.accumulatedTime = 0
+        }
+
+        if (this.accumulatedTime === 0) {
+          // no need to cancel animationID here; shouldn't have any in flight
+          this.animationID = null
+          this.$emit('motion-restart')
+          this.animate()
+          return
+        }
+
+        let currentFrameCompletion =
+          (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
+        const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
+
+        let newIdealValue = this.idealValue
+        let newIdealVelocity = this.idealVelocity
+
+        // iterate as if the animation took place
+        for (let i = 0; i < framesToCatchUp; i++) {
+          ;[newIdealValue, newIdealVelocity] = stepper(
+            msPerFrame / 1000,
+            newIdealValue,
+            newIdealVelocity,
+            this.value,
+            this.spring.stiffness,
+            this.spring.damping,
+            this.spring.precision
+          )
+        }
+
+        const [nextIdealValue, nextIdealVelocity] = stepper(
           msPerFrame / 1000,
-          this.currentValue,
-          this.currentVelocity,
+          newIdealValue,
+          newIdealVelocity,
           this.value,
           this.spring.stiffness,
           this.spring.damping,
           this.spring.precision
         )
 
+        this.currentValue =
+          newIdealValue +
+          (nextIdealValue - newIdealValue) * currentFrameCompletion
+        this.currentVelocity =
+          newIdealVelocity +
+          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
+        this.idealValue = newIdealValue
+        this.idealVelocity = newIdealVelocity
+
+        // out of the update loop
+        this.animationID = null
+        // the amount we're looped over above
+        this.accumulatedTime -= framesToCatchUp * msPerFrame
+
+        // keep going!
         this.animate()
       })
     },

@@ -4,6 +4,7 @@
             :spring="config"
             @motion-start="start"
             @motion-end="end"
+            @motion-restart="restart"
     >
       <template scope="values">
         <span>Value is</span>
@@ -67,6 +68,9 @@ export default {
       console.log('Stop')
       console.timeEnd('motion')
       console.log('---------')
+    },
+    restart () {
+      console.log('Restart')
     },
   },
 
