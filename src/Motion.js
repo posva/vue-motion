@@ -1,4 +1,3 @@
-<script>
 import stepper from './stepper'
 
 const msPerFrame = 1000 / 60
@@ -147,4 +146,3 @@ function shouldStopAnimation (currentValue, value, currentVelocity) {
 
   return true
 }
-</script>

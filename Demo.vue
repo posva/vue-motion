@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Motion from './src/Motion.vue'
+import Motion from './src/Motion'
 
 export default {
   data () {

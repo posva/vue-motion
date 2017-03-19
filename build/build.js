@@ -33,7 +33,7 @@ function rollupBundle ({ env }) {
     plugins: [
       node(),
       cjs(),
-      vue({ compileTemplate: true }),
+      vue({ compileTemplate: true, css: false }),
       jsx({ factory: 'h' }),
       replace(Object.assign({
         __VERSION__: version

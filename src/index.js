@@ -1,9 +1,7 @@
-import Hello from './Hello.vue'
-import HelloJsx from './Hello.jsx'
+import Motion from './Motion'
 
 function plugin (Vue) {
-  Vue.component('hello', Hello)
-  Vue.component('hello-jsx', HelloJsx)
+  Vue.component('Motion', Motion)
 }
 
 // Install by default if using the script tag
@@ -15,7 +13,6 @@ export default plugin
 const version = '__VERSION__'
 // Export all components too
 export {
-  Hello,
-  HelloJsx,
+  Motion,
   version
 }
