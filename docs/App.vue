@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import Motion from './Motion.vue'
-import presets from './presets'
+import Motion from '../src/Motion.vue'
+import presets from '../src/presets'
 
 export default {
   data () {
@@ -52,8 +52,8 @@ export default {
       config: {
         stiffness: 170,
         damping: 26,
-        precision: 0.01,
-      },
+        precision: 0.01
+      }
     }
   },
 
@@ -85,7 +85,7 @@ export default {
     },
     restart () {
       console.log('Restart')
-    },
+    }
   },
 
   components: { Motion }

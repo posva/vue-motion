@@ -7,13 +7,25 @@ mochaDiv.id = 'mocha'
 document.body.appendChild(mochaDiv)
 
 import 'mocha/mocha.js'
+import sinon from 'sinon'
 import chai from 'chai'
 window.mocha.setup({
   ui: 'bdd',
+  slow: 750,
+  timeout: 5000,
   globals: [
-    '__VUE_DEVTOOLS_INSTANCE_MAP__'
+    '__VUE_DEVTOOLS_INSTANCE_MAP__',
+    'script',
+    'inject',
+    'originalOpenFunction',
+    'pb_blacklist',
+    'pb_whitelist',
+    'pb_isRunning'
   ]
 })
+window.sinon = sinon
+chai.use(require('chai-dom'))
+chai.use(require('sinon-chai'))
 chai.should()
 
 let vms = []
@@ -41,10 +53,15 @@ before(function () {
   vms = []
   testId = 0
 })
-after(function () {
-  requestAnimationFrame(function () {
-    setTimeout(function () {
-      vms.forEach(vm => { vm.$children[0].visible = false })
+after(() => {
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      vms.forEach(vm => {
+        // Hide if test passed
+        if (!vm.$el.parentElement.classList.contains('fail')) {
+          vm.$children[0].visible = false
+        }
+      })
     }, 100)
   })
 })

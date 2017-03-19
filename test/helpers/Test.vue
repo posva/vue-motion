@@ -104,4 +104,14 @@ export default {
   display: none;
   visibility: hidden;
 }
+.box {
+  width: 100px;
+  height: 100px;
+  background-color: crimson;
+}
+.box-container {
+  margin-left: 30px;
+  width: 500px;
+  background-color: ghostwhite;
+}
 </style>

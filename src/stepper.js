@@ -4,8 +4,8 @@
 // This is fine and danger-free against mutations because the callsite
 // immediately destructures it and gets the numbers inside without passing the
 // array reference around.
-let reusedTuple = [0, 0]
-export default function stepper(
+const reusedTuple = [0, 0]
+export default function stepper (
   secondPerFrame,
   x,
   v,

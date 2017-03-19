@@ -88,7 +88,7 @@
     "rollup-plugin-postcss": "^0.2.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-vue": "^2.2.20",
-    "sinon": "^1.17.7",
+    "sinon": "next",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "stylefmt": "^5.1.2",

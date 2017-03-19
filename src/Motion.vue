@@ -1,34 +1,32 @@
 <script>
-import spring from './spring'
 import stepper from './stepper'
 
-const s = spring(10)
 const msPerFrame = 1000 / 60
 
 export default {
   data () {
     return {
       currentValue: 0,
-      currentVelocity: 0,
+      currentVelocity: 0
     }
   },
 
   props: {
     value: {
-      type: Number,
+      type: Number
     },
     tag: {
       type: String,
-      default: 'span',
+      default: 'span'
     },
-    spring: Object,
+    spring: Object
   },
 
   render (h) {
     return h(this.tag, [
       this.$scopedSlots.default({
-        value: this.currentValue,
-      }),
+        value: this.currentValue
+      })
     ])
   },
 
@@ -89,7 +87,7 @@ export default {
           return
         }
 
-        let currentFrameCompletion =
+        const currentFrameCompletion =
           (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
 
@@ -136,17 +134,17 @@ export default {
         // keep going!
         this.animate()
       })
-    },
-  },
+    }
+  }
 }
 
-function shouldStopAnimation(currentValue, value, currentVelocity) {
+function shouldStopAnimation (currentValue, value, currentVelocity) {
   if (currentVelocity !== 0) return false
 
   // stepper will have already taken care of rounding precision errors, so
   // won't have such thing as 0.9999 !=== 1
   if (currentValue !== value) return false
 
-  return true;
+  return true
 }
 </script>
