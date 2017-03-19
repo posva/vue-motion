@@ -6,7 +6,6 @@
   "main": "dist/vue-motion.common.js",
   "browser": "dist/vue-motion.js",
   "unpkg": "dist/vue-motion.js",
-  "style": "dist/vue-motion.css",
   "files": [
     "dist",
     "src"
@@ -16,10 +15,8 @@
     "build": "node build/build.js",
     "build:dll": "webpack --progress --config build/webpack.config.dll.js",
     "postinstall": "yon run build:dll",
-    "lint": "yon run lint:js && yon run lint:css",
-    "lint:js": "eslint --ext js --ext jsx --ext vue src test/**/*.spec.js test/*.js build",
-    "lint:js:fix": "yon run lint:js -- --fix",
-    "lint:css": "stylelint src/**/*.{vue,css}",
+    "lint": "eslint --ext js --ext jsx --ext vue src test/**/*.spec.js test/*.js build",
+    "lint:fix": "yon run lint -- --fix",
     "lint:staged": "lint-staged",
     "pretest": "yon run lint",
     "test": "cross-env BABEL_ENV=test karma start test/karma.conf.js --single-run",
@@ -31,10 +28,6 @@
     "*.{vue,jsx,js}": [
       "eslint --fix",
       "git add"
-    ],
-    "*.{vue,css}": [
-      "stylefmt",
-      "stylelint"
     ]
   },
   "pre-commit": "lint:staged",
@@ -91,10 +84,6 @@
     "sinon": "next",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
-    "stylefmt": "^5.1.2",
-    "stylelint": "^7.9.0",
-    "stylelint-config-standard": "^16.0.0",
-    "stylelint-processor-html": "^1.0.0",
     "uppercamelcase": "^1.1.0",
     "vue": "^2.1.10",
     "vue-loader": "^11.1.0",
