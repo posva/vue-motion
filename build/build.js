@@ -7,7 +7,6 @@ const replace = require('rollup-plugin-replace')
 const cjs = require('rollup-plugin-commonjs')
 const node = require('rollup-plugin-node-resolve')
 const uglify = require('uglify-js')
-const CleanCSS = require('clean-css')
 const packageData = require('../package.json')
 const { version, author, name } = packageData
 // remove the email at the end
@@ -18,8 +17,7 @@ mkdirp('dist')
 
 const {
   logError,
-  write,
-  processStyle
+  write
 } = require('./utils')
 
 const banner =
@@ -35,25 +33,7 @@ function rollupBundle ({ env }) {
     plugins: [
       node(),
       cjs(),
-      vue({
-        compileTemplate: true,
-        css (styles, stylesNodes) {
-          // Only generate the styles once
-          if (env['process.env.NODE_ENV'] === '"production"') {
-            Promise.all(
-              stylesNodes.map(processStyle)
-            ).then(css => {
-              const result = css.map(c => c.css).join('')
-              // write the css for every component
-              // TODO add it back if we extract all components to individual js
-              // files too
-              // css.forEach(writeCss)
-              write(`dist/${name}.css`, result)
-              write(`dist/${name}.min.css`, new CleanCSS().minify(result).styles)
-            }).catch(logError)
-          }
-        }
-      }),
+      vue({ compileTemplate: true }),
       jsx({ factory: 'h' }),
       replace(Object.assign({
         __VERSION__: version
