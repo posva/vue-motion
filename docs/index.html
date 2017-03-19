@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <title>docs</title>
+  <link rel="stylesheet" href="https://unpkg.com/docute@3/dist/docute.css">
+  <style>
+  #landing .demo {
+    width: 100px;
+    height: 100px;
+    background-color: crimson;
+  }
+  #landing .demo-container {
+    margin-left: 30px;
+    width: 500px;
+    background-color: ghostwhite;
+  }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="./dist/Motion.js"></script>
+  <script src="https://unpkg.com/docute@3/dist/docute.js"></script>
+  <script>
+  docute.init({
+    landing: {
+      source: 'landing.html',
+      component: {
+        data () {
+          return {
+            n: 0,
+            max: 400,
+            config: {
+              stiffness: 170,
+              damping: 26,
+              precision: 0.01,
+            },
+          }
+        },
+
+        methods: {
+          toggle () {
+            this.n = this.n < this.max / 2
+                   ? this.max
+                   : 0
+          },
+        },
+
+        components: { Motion }
+      }
+    }
+  })
+  </script>
+</body>
+</html>
