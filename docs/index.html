@@ -21,35 +21,12 @@
 </head>
 <body>
   <div id="app"></div>
-  <script src="./dist/Motion.js"></script>
+  <script src="./dist/App.js"></script>
   <script src="https://unpkg.com/docute@3/dist/docute.js"></script>
   <script>
   docute.init({
     landing: {
-      source: 'landing.html',
-      component: {
-        data () {
-          return {
-            n: 0,
-            max: 400,
-            config: {
-              stiffness: 170,
-              damping: 26,
-              precision: 0.01,
-            },
-          }
-        },
-
-        methods: {
-          toggle () {
-            this.n = this.n < this.max / 2
-                   ? this.max
-                   : 0
-          },
-        },
-
-        components: { Motion }
-      }
+      component: App
     }
   })
   </script>
