@@ -1,4 +1,5 @@
 import MotionInjector from 'inject-loader!src/Motion'
+import presets from 'src/presets'
 import {
   createVM,
   nextTick,
@@ -41,7 +42,7 @@ describe('Motion', function () {
   afterEach(function () {
   })
 
-  it('change a value over time', function (done) {
+  it('works with perfect time', function (done) {
     const vm = createVM(this, `
 <Motion :value="n" :spring="config">
   <template scope="values">
@@ -104,6 +105,27 @@ describe('Motion', function () {
       this.step()
     }).then(() => {
       vm.$('pre').should.have.text('0.009444444444442297')
+    }).then(done)
+  })
+
+  it('accepts a string as the spring', function (done) {
+    const vm = createVM(this, `
+<Motion ref="motion" :value="n" :spring="spring">
+  <template scope="values">
+    <pre>{{ values.value }}</pre>
+  </template>
+</Motion>
+`, {
+  data: {
+    n: 0,
+    spring: 'noWobble',
+  },
+  components: { Motion },
+})
+    vm.$refs.motion.springConfig.should.eql(presets.noWobble)
+    vm.spring = 'gentle'
+    nextTick().then(() => {
+      vm.$refs.motion.springConfig.should.eql(presets.gentle)
     }).then(done)
   })
 

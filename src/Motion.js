@@ -1,4 +1,5 @@
 import stepper from './stepper'
+import presets from './presets'
 import { raf, now } from './utils'
 
 const msPerFrame = 1000 / 60
@@ -19,7 +20,15 @@ export default {
       type: String,
       default: 'span',
     },
-    spring: Object,
+    spring: [Object, String],
+  },
+
+  computed: {
+    springConfig () {
+      return typeof this.spring === 'string'
+        ? presets[this.spring]
+        : this.spring
+    },
   },
 
   render (h) {
@@ -101,9 +110,9 @@ export default {
             newIdealValue,
             newIdealVelocity,
             this.value,
-            this.spring.stiffness,
-            this.spring.damping,
-            this.spring.precision
+            this.springConfig.stiffness,
+            this.springConfig.damping,
+            this.springConfig.precision
           )
         }
 
@@ -112,9 +121,9 @@ export default {
           newIdealValue,
           newIdealVelocity,
           this.value,
-          this.spring.stiffness,
-          this.spring.damping,
-          this.spring.precision
+          this.springConfig.stiffness,
+          this.springConfig.damping,
+          this.springConfig.precision
         )
 
         this.currentValue =
