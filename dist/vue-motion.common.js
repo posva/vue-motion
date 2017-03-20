@@ -1,5 +1,5 @@
 /*!
- * vue-motion v0.1.0
+ * vue-motion v0.1.1
  * (c) 2017 Eduardo San Martin Morote
  * Released under the MIT License.
  */
@@ -235,7 +235,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   window.Vue.use(plugin);
 }
 
-var version = '0.1.0';
+var version = '0.1.1';
 
 exports['default'] = plugin;
 exports.Motion = Motion;
