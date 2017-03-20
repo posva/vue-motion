@@ -1,20 +1,4 @@
-const merge = require('webpack-merge')
-const baseConfig = require('../build/webpack.config.dev.js')
-
-const webpackConfig = merge(baseConfig, {
-  // use inline sourcemap for karma-sourcemap-loader
-  devtool: '#inline-source-map',
-})
-
-webpackConfig.plugins = []
-
-const vueRule = webpackConfig.module.rules.find(rule => rule.loader === 'vue-loader')
-vueRule.options = vueRule.options || {}
-vueRule.options.loaders = vueRule.options.loaders || {}
-vueRule.options.loaders.js = 'babel-loader'
-
-// no need for app entry during tests
-delete webpackConfig.entry
+const webpackConfig = require('../build/webpack.config.karma.js')
 
 module.exports = function (config) {
   config.set({

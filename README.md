@@ -113,4 +113,6 @@ npm publish
 
 ## License
 
+Thanks to @chenglou and all who contributed to [react-motion](https://github.com/chenglou/react-motion), from which, this project was inspired.
+
 [MIT](http://opensource.org/licenses/MIT)

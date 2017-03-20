@@ -4200,6 +4200,14 @@ npm-path@^2.0.2:
   dependencies:
     which "^1.2.10"
 
+npm-run-parallel@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/npm-run-parallel/-/npm-run-parallel-0.5.0.tgz#3e4fd9c6d280e013182cbe2806c110b178421a0e"
+  dependencies:
+    meow "^3.7.0"
+    rx "^4.0.8"
+    rx-node "^1.0.1"
+
 npm-run-path@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-2.0.2.tgz#35a9232dfa35d7067b4cb2ddf2357b1871536c5f"
@@ -5709,6 +5717,16 @@ run-async@^0.1.0:
 rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
+
+rx-node@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/rx-node/-/rx-node-1.0.2.tgz#151240725a79e857360ab06cc626799965e094de"
+  dependencies:
+    rx "*"
+
+rx@*, rx@^4.0.8:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
 rxjs@^5.0.0-beta.11:
   version "5.2.0"
