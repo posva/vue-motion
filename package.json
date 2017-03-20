@@ -11,9 +11,12 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf dist",
+    "prebuild": "rimraf dist",
     "build": "node build/build.js",
-    "build:dll": "webpack --progress --config build/webpack.config.dll.js",
+    "docs": "yon docs:build -- --lib Landing --prod",
+    "docs:dev": "npm-run-parallel docs:build docs:serve",
+    "docs:build": "cd docs && vue build src/App.vue",
+    "docs:serve": "docute docs",
     "lint": "eslint --ext js --ext jsx --ext vue src test/**/*.spec.js test/*.js test/helpers docs/src build",
     "lint:fix": "yon run lint -- --fix",
     "lint:staged": "lint-staged",

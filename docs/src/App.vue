@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import Motion from '../src/Motion'
-import presets from '../src/presets'
+import { Motion } from '../../dist/vue-motion.common.js'
+import presets from '../../src/presets'
 
 export default {
   data () {
