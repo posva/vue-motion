@@ -15,7 +15,7 @@
     "build": "node build/build.js",
     "build:dll": "webpack --progress --config build/webpack.config.dll.js",
     "postinstall": "yon run build:dll",
-    "lint": "eslint --ext js --ext jsx --ext vue src test/**/*.spec.js test/*.js test/helpers build",
+    "lint": "eslint --ext js --ext jsx --ext vue src test/**/*.spec.js test/*.js test/helpers docs/src build",
     "lint:fix": "yon run lint -- --fix",
     "lint:staged": "lint-staged",
     "pretest": "yon run lint",

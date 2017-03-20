@@ -52,15 +52,15 @@ export default {
       config: {
         stiffness: 170,
         damping: 26,
-        precision: 0.01
-      }
+        precision: 0.01,
+      },
     }
   },
 
   computed: {
     presets () {
       return presets
-    }
+    },
   },
 
   methods: {
@@ -85,10 +85,10 @@ export default {
     },
     restart () {
       console.log('Restart')
-    }
+    },
   },
 
-  components: { Motion }
+  components: { Motion },
 }
 </script>
 
