@@ -1,6 +1,7 @@
 {
   "tagName": "v%s",
   "commitMessage": "🔖 %s",
+  "buildCommand": "yarn build",
   "github": {
     "release": true,
     "releaseName": "Release %s",
