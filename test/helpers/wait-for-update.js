@@ -52,5 +52,11 @@ function nextTick () {
   return chainer
 }
 
-exports.nextTick = nextTick
-exports.delay = time => new Promise(resolve => setTimeout(resolve, time))
+function delay (time) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
+export {
+  nextTick,
+  delay,
+}
