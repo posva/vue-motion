@@ -28,7 +28,8 @@ describe('Motion', function () {
       }
       if (count >= maxCount) throw new Error('Too many calls')
     }
-    this.now = sinon.spy(() => now += msPerFrame) // eslint-disable-line no-return-assign
+    this.timeSlowdown = 1
+    this.now = sinon.spy(() => now += this.timeSlowdown * msPerFrame) // eslint-disable-line no-return-assign
     Motion = MotionInjector({
       './utils': {
         raf: this.raf,
@@ -68,6 +69,41 @@ describe('Motion', function () {
     }).then(() => {
       vm.$('pre').should.have.text('1.1897376543209877')
       this.stepUntil(() => vm.$('pre').text === '10')
+    }).then(done)
+  })
+
+  it('works with imperfect time', function (done) {
+    this.timeSlowdown = 11
+    const vm = createVM(this, `
+<Motion :value="n" :spring="config">
+  <template scope="values">
+    <pre>{{ values.value }}</pre>
+  </template>
+</Motion>
+`, {
+  data: {
+    n: 0,
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('pre').should.have.text('0')
+    vm.n = 10
+    nextTick().then(() => {
+      this.step()
+    }).then(() => {
+      vm.$('pre').should.have.text('0')
+      this.timeSlowdown = 0.01
+      this.step()
+    }).then(() => {
+      vm.$('pre').should.have.text('0.0047222222222211485')
+      this.step()
+    }).then(() => {
+      vm.$('pre').should.have.text('0.009444444444442297')
     }).then(done)
   })
 
