@@ -1,6 +1,7 @@
 # VueMotion
 
-[![npm](https://img.shields.io/npm/v/vue-motion.svg)](https://www.npmjs.com/package/vue-motion) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/) ![size](http://img.badgesize.io/posva/vue-motion/master/dist/vue-motion.min.js.svg?compression=gzip&nocache)
+[![Build Status](https://img.shields.io/circleci/project/posva/vue-motion.svg)](https://circleci.com/gh/posva/vue-motion) [![codecov](https://codecov.io/gh/posva/vue-motion/branch/master/graph/badge.svg)](https://codecov.io/gh/posva/vue-motion) [![npm](https://img.shields.io/npm/v/vue-motion.svg)](https://www.npmjs.com/package/vue-motion) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/) ![size](http://img.badgesize.io/posva/vue-motion/master/dist/vue-motion.min.js.svg?compression=gzip&nocache)
+
 
 > Easy and natural state transitions
 
