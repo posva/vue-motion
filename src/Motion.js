@@ -20,7 +20,10 @@ export default {
       type: String,
       default: 'span',
     },
-    spring: [Object, String],
+    spring: {
+      type: [Object, String],
+      default: 'noWobble',
+    },
   },
 
   computed: {

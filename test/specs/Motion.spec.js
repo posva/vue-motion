@@ -129,6 +129,20 @@ describe('Motion', function () {
     }).then(done)
   })
 
+  it('uses noWobble by default as the spring', function () {
+    const vm = createVM(this, `
+<Motion ref="motion" :value="n">
+  <template scope="values">
+    <pre>{{ values.value }}</pre>
+  </template>
+</Motion>
+`, {
+  data: { n: 0 },
+  components: { Motion },
+})
+    vm.$refs.motion.springConfig.should.eql(presets.noWobble)
+  })
+
   it.skip('works with jsx', function () {
     const vm = createVM(this, function (h) {
       const options = {
