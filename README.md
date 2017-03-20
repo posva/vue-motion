@@ -73,8 +73,6 @@ export default {
 
 ##### Events
 
-Three events are emitted
-
 - `motion-start`: Emitted when a given value change and a new motion starts
 - `motion-end`: Emitted when a motion ends
 
