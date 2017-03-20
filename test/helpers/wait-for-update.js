@@ -15,7 +15,7 @@ function nextTick () {
     then (cb) {
       jobs.push(cb)
       return chainer
-    }
+    },
   }
 
   function shift (...args) {

@@ -3,11 +3,11 @@ const { join } = require('path')
 
 const {
   red,
-  logError
+  logError,
 } = require('./log')
 
 const {
-  processStyle
+  processStyle,
 } = require('./style')
 
 const uppercamelcase = require('uppercamelcase')
@@ -18,7 +18,7 @@ const {
   author,
   name,
   version,
-  dllPlugin
+  dllPlugin,
 } = require('../../package.json')
 
 const authorName = author.replace(/\s+<.*/, '')
@@ -44,8 +44,8 @@ exports.logError = logError
 // but it simply don't work
 const sassOptions = {
   includePaths: [
-    join(__dirname, '../../node_modules')
-  ]
+    join(__dirname, '../../node_modules'),
+  ],
 }
 
 // don't extract css in test mode
@@ -53,12 +53,12 @@ const nullLoader = process.env.NODE_ENV === 'common' ? 'null-loader!' : ''
 exports.vueLoaders =
   process.env.BABEL_ENV === 'test' ? {
     css: 'css-loader',
-    scss: `css-loader!sass-loader?${JSON.stringify(sassOptions)}`
+    scss: `css-loader!sass-loader?${JSON.stringify(sassOptions)}`,
   } : {
     css: ExtractTextPlugin.extract(`${nullLoader}css-loader`),
     scss: ExtractTextPlugin.extract(
       `${nullLoader}css-loader!sass-loader?${JSON.stringify(sassOptions)}`
-    )
+    ),
   }
 
 // style.js

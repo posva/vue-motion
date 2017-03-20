@@ -13,7 +13,7 @@ function processCss (style) {
       return {
         name: componentName,
         css: result.css,
-        map: result.map
+        map: result.map,
       }
     })
 }
@@ -32,10 +32,10 @@ function processStylus (style) {
       resolve({
         original: {
           code: style.code,
-          ext: 'styl'
+          ext: 'styl',
         },
         name: componentName,
-        css
+        css,
       })
     })
   })
@@ -62,5 +62,5 @@ function writeCss (style) {
 
 module.exports = {
   writeCss,
-  processStyle
+  processStyle,
 }

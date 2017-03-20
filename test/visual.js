@@ -20,8 +20,8 @@ window.mocha.setup({
     'originalOpenFunction',
     'pb_blacklist',
     'pb_whitelist',
-    'pb_isRunning'
-  ]
+    'pb_isRunning',
+  ],
 })
 window.sinon = sinon
 chai.use(require('chai-dom'))

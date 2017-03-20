@@ -14,5 +14,5 @@ const version = '__VERSION__'
 // Export all components too
 export {
   Motion,
-  version
+  version,
 }

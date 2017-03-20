@@ -2,7 +2,7 @@ import Motion from 'src/Motion'
 import {
   createVM,
   nextTick,
-  delay
+  delay,
 } from '../helpers'
 
 describe('Motion', function () {
@@ -19,10 +19,10 @@ describe('Motion', function () {
     config: {
       stiffness: 170,
       damping: 26,
-      precision: 0.01
-    }
+      precision: 0.01,
+    },
   },
-  components: { Motion }
+  components: { Motion },
 })
     vm.$('pre').should.have.text('0')
     vm.n = 400
@@ -37,8 +37,8 @@ describe('Motion', function () {
         scopedSlots: {
           default: values => (
             <pre>{values}</pre>
-          )
-        }
+          ),
+        },
       }
       return (
         <Motion value={this.n}
@@ -52,10 +52,10 @@ describe('Motion', function () {
         config: {
           stiffness: 170,
           damping: 26,
-          precision: 0.01
-        }
+          precision: 0.01,
+        },
       },
-      components: { Motion }
+      components: { Motion },
     })
     vm
   })

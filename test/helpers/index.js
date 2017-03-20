@@ -20,5 +20,5 @@ export {
   createVM,
   Vue,
   nextTick,
-  delay
+  delay,
 }

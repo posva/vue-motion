@@ -17,7 +17,7 @@ mkdirp('dist')
 
 const {
   logError,
-  write
+  write,
 } = require('./utils')
 
 const banner =
@@ -36,10 +36,10 @@ function rollupBundle ({ env }) {
       vue({ compileTemplate: true, css: false }),
       jsx({ factory: 'h' }),
       replace(Object.assign({
-        __VERSION__: version
+        __VERSION__: version,
       }, env)),
-      buble()
-    ]
+      buble(),
+    ],
   })
 }
 
@@ -47,12 +47,12 @@ const bundleOptions = {
   banner: banner,
   exports: 'named',
   format: 'umd',
-  moduleName: name
+  moduleName: name,
 }
 
 function createBundle ({ name, env }) {
   return rollupBundle({
-    env
+    env,
   }).then(function (bundle) {
     const code = bundle.generate(bundleOptions).code
     if (/min$/.test(name)) {
@@ -60,8 +60,8 @@ function createBundle ({ name, env }) {
         fromString: true,
         output: {
           preamble: banner,
-          ascii_only: true // eslint-disable-line camelcase
-        }
+          ascii_only: true, // eslint-disable-line camelcase
+        },
       }).code
       return write(`dist/${name}.js`, minified)
     } else {
@@ -74,21 +74,21 @@ function createBundle ({ name, env }) {
 createBundle({
   name: `${name}`,
   env: {
-    'process.env.NODE_ENV': '"development"'
-  }
+    'process.env.NODE_ENV': '"development"',
+  },
 })
 
 // Commonjs bundle (preserves process.env.NODE_ENV) so
 // the user can replace it in dev and prod mode
 createBundle({
   name: `${name}.common`,
-  env: {}
+  env: {},
 })
 
 // Minified version for browser
 createBundle({
   name: `${name}.min`,
   env: {
-    'process.env.NODE_ENV': '"production"'
-  }
+    'process.env.NODE_ENV': '"production"',
+  },
 })

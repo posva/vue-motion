@@ -6,26 +6,26 @@ export default {
   data () {
     return {
       currentValue: 0,
-      currentVelocity: 0
+      currentVelocity: 0,
     }
   },
 
   props: {
     value: {
-      type: Number
+      type: Number,
     },
     tag: {
       type: String,
-      default: 'span'
+      default: 'span',
     },
-    spring: Object
+    spring: Object,
   },
 
   render (h) {
     return h(this.tag, [
       this.$scopedSlots.default({
-        value: this.currentValue
-      })
+        value: this.currentValue,
+      }),
     ])
   },
 
@@ -36,7 +36,7 @@ export default {
         this.accumulatedTime = 0
         this.animate()
       }
-    }
+    },
   },
 
   mounted () {
@@ -133,8 +133,8 @@ export default {
         // keep going!
         this.animate()
       })
-    }
-  }
+    },
+  },
 }
 
 function shouldStopAnimation (currentValue, value, currentVelocity) {
