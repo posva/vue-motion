@@ -36,6 +36,48 @@ Vue.use(VueMotion)
 <script src="https://unpkg.com/vue-motion"></script>
 ```
 
+### Components
+
+#### Motion
+
+Motion allows you to transition a single value or a group of values:
+
+```vue
+<template>
+  <Motion :value="x">
+    <template scope="values">
+      <div class="container">
+        <div class="box"
+            :style="{transform: `translate3d(${values.default}px, 0, 0)`}"
+        ></div>
+      </div>
+    </template>
+  </Motion>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      x: 0,
+    }
+  },
+  
+  created () {
+    // Make the block move at creation
+    this.x = 400
+  },
+}
+</script>
+```
+
+##### Events
+
+Three events are emitted
+
+- `motion-start`: Emitted when a given value change and a new motion starts
+- `motion-end`: Emitted when a motion ends
+
 ## Development
 
 ### Launch visual tests
