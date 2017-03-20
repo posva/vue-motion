@@ -1,12 +1,13 @@
 /*!
- * vue-motion v0.1.2
+ * vue-motion v0.1.3
  * (c) 2017 Eduardo San Martin Morote
  * Released under the MIT License.
  */
+
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global['vue-motion'] = global['vue-motion'] || {})));
+	(factory((global.VueMotion = global.VueMotion || {})));
 }(this, (function (exports) { 'use strict';
 
 /* @flow */
@@ -235,7 +236,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   window.Vue.use(plugin);
 }
 
-var version = '0.1.2';
+var version = '0.1.3';
 
 exports['default'] = plugin;
 exports.Motion = Motion;
