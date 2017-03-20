@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const DashboardPlugin = require('webpack-dashboard/plugin')
 const base = require('./webpack.config.base')
 const { resolve, join } = require('path')
@@ -78,7 +78,7 @@ module.exports = merge(base, {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false,
-      reportFilename: resolve(__dirname, `../reports/${process.env.NODE_ENV}.html`)
+      reportFilename: resolve(__dirname, `../reports/${process.env.NODE_ENV || 'dev'}.html`)
     })
   ],
   devtool: '#eval-source-map',
