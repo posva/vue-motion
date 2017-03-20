@@ -18,8 +18,6 @@ npm install --save vue-motion
 ```js
 import Vue from 'vue'
 import VueMotion from 'vue-motion'
-// You need a specific loader for CSS files like https://github.com/webpack/css-loader
-import 'vue-motion/dist/vue-motion.css'
 
 Vue.use(VueMotion)
 ```
@@ -29,11 +27,9 @@ Vue.use(VueMotion)
 ```html
 <!-- Include after Vue -->
 <!-- Local files -->
-<link rel="stylesheet" href="vue-motion/dist/vue-motion.css"></link>
 <script src="vue-motion/dist/vue-motion.js"></script>
 
 <!-- From CDN -->
-<link rel="stylesheet" href="https://unpkg.com/vue-motion/dist/vue-motion.css"></link>
 <script src="https://unpkg.com/vue-motion"></script>
 ```
 
