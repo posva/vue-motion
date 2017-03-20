@@ -1,4 +1,5 @@
 import stepper from './stepper'
+import { raf, now } from './utils'
 
 const msPerFrame = 1000 / 60
 
@@ -32,7 +33,7 @@ export default {
   watch: {
     value (old, current) {
       if (old !== current && !this.wasAnimating) {
-        this.prevTime = performance.now()
+        this.prevTime = now()
         this.accumulatedTime = 0
         this.animate()
       }
@@ -41,7 +42,7 @@ export default {
 
   mounted () {
     this.currentValue = this.value
-    this.prevTime = performance.now()
+    this.prevTime = now()
     this.accumulatedTime = 0
     this.idealValue = this.currentValue
     this.idealVelocity = this.currentVelocity
@@ -50,7 +51,7 @@ export default {
 
   methods: {
     animate () {
-      this.animationId = requestAnimationFrame(() => {
+      this.animationId = raf(() => {
         if (shouldStopAnimation(
           this.currentValue,
           this.value,
@@ -68,7 +69,7 @@ export default {
         this.wasAnimating = true
 
         // get time from last frame
-        const currentTime = performance.now()
+        const currentTime = now()
         const timeDelta = currentTime - this.prevTime
         this.prevTime = currentTime
         this.accumulatedTime += timeDelta

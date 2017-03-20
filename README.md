@@ -48,7 +48,7 @@ Motion allows you to transition a single value or a group of values:
     <template scope="values">
       <div class="container">
         <div class="box"
-            :style="{transform: `translate3d(${values.default}px, 0, 0)`}"
+             :style="{transform: `translate3d(${values.default}px, 0, 0)`}"
         ></div>
       </div>
     </template>

@@ -55,6 +55,7 @@
     "eslint-plugin-vue": "^2.0.1",
     "extract-text-webpack-plugin": "^2.0.0",
     "html-webpack-plugin": "^2.28.0",
+    "inject-loader": "^3.0.0-beta4",
     "karma": "^1.5.0",
     "karma-chai-dom": "^1.1.0",
     "karma-chrome-launcher": "^2.0.0",

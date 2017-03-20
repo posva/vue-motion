@@ -1,12 +1,46 @@
-import Motion from 'src/Motion'
+import MotionInjector from 'inject-loader!src/Motion'
 import {
   createVM,
   nextTick,
-  delay,
 } from '../helpers'
 
+const msPerFrame = 1000 / 60
+
+let Motion
+
 describe('Motion', function () {
-  it('renders an upgraded button', function (done) {
+  beforeEach(function () {
+    let now = 0
+    const queue = []
+    this.raf = sinon.spy(cb => {
+      queue.push(cb)
+    })
+    this.step = function step (n = 1) {
+      for (let i = 0; i < n; ++i) {
+        if (!queue.length) return
+        queue.shift()()
+      }
+    }
+    this.stepUntil = function step (fn, maxCount = 5000) {
+      let count = 0
+      while (queue.length && !fn() && count++ < maxCount) {
+        queue.shift()()
+      }
+      if (count >= maxCount) throw new Error('Too many calls')
+    }
+    this.now = sinon.spy(() => now += msPerFrame) // eslint-disable-line no-return-assign
+    Motion = MotionInjector({
+      './utils': {
+        raf: this.raf,
+        now: this.now,
+      },
+    }).default
+  })
+
+  afterEach(function () {
+  })
+
+  it('change a value over time', function (done) {
     const vm = createVM(this, `
 <Motion :value="n" :spring="config">
   <template scope="values">
@@ -25,13 +59,19 @@ describe('Motion', function () {
   components: { Motion },
 })
     vm.$('pre').should.have.text('0')
-    vm.n = 400
-    nextTick()
-      .then(() => delay(700))
-      .then(done)
+    vm.n = 10
+    nextTick().then(() => {
+      this.step()
+    }).then(() => {
+      vm.$('pre').should.have.text('0.4722222222222221')
+      this.step()
+    }).then(() => {
+      vm.$('pre').should.have.text('1.1897376543209877')
+      this.stepUntil(() => vm.$('pre').text === '10')
+    }).then(done)
   })
 
-  it('works with jsx', function () {
+  it.skip('works with jsx', function () {
     const vm = createVM(this, function (h) {
       const options = {
         scopedSlots: {
