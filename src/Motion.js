@@ -138,6 +138,7 @@ export default {
             )
           }
 
+          console.log(`From ${newIdealValue} to ${value} at ${newIdealVelocity}`)
           const [nextIdealValue, nextIdealVelocity] = stepper(
             msPerFrame / 1000,
             newIdealValue,
