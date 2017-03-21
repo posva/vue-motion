@@ -159,9 +159,9 @@ export default {
           this.idealVelocities[key] = newIdealVelocity
         }
 
+        console.log(framesToCatchUp)
         console.log(this.currentValues.value)
         console.log(this.accumulatedTime)
-        console.log(framesToCatchUp)
 
         // out of the update loop
         this.animationID = null
