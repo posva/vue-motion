@@ -39,9 +39,6 @@ describe('Motion', function () {
     }).default
   })
 
-  afterEach(function () {
-  })
-
   it('works with perfect time', function (done) {
     const vm = createVM(this, `
 <Motion :value="n" :spring="config">
@@ -141,6 +138,43 @@ describe('Motion', function () {
   components: { Motion },
 })
     vm.$refs.motion.springConfig.should.eql(presets.noWobble)
+  })
+
+  it('supports object syntax', function (done) {
+    const vm = createVM(this, `
+<Motion :values="values" :spring="config">
+  <template scope="values">
+    <span class="a">{{ values.a }}</span>
+    <span class="b">{{ values.b }}</span>
+  </template>
+</Motion>
+`, {
+  data: {
+    values: {
+      a: 0,
+      b: -10,
+    },
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('.a').should.have.text('0')
+    vm.$('.b').should.have.text('-10')
+    vm.values.a = 10
+    vm.values.b = 10
+    nextTick().then(() => {
+      this.step()
+    }).then(() => {
+      vm.$('.a').should.have.text('0.4722222222222221')
+      this.step()
+    }).then(() => {
+      vm.$('.a').should.have.text('1.1897376543209877')
+      this.stepUntil(() => vm.$('.a').text === '10' && vm.$('.b').text === '10')
+    }).then(done)
   })
 
   it.skip('works with jsx', function () {
