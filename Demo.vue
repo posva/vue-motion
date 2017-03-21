@@ -28,8 +28,8 @@ export default {
       config: {
         stiffness: 170,
         damping: 26,
-        precision: 0.01
-      }
+        precision: 0.01,
+      },
     }
   },
 
@@ -38,10 +38,10 @@ export default {
       this.n = this.n < this.max / 2
              ? this.max
              : 0
-    }
+    },
   },
 
-  components: { Motion }
+  components: { Motion },
 }
 </script>
 
