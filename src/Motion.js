@@ -7,15 +7,14 @@ const msPerFrame = 1000 / 60
 export default {
   data () {
     return {
-      currentValue: 0,
-      currentVelocity: 0,
+      currentValues: null,
+      currentVelocities: null,
     }
   },
 
   props: {
-    value: {
-      type: Number,
-    },
+    value: Number,
+    values: Object,
     tag: {
       type: String,
       default: 'span',
@@ -32,18 +31,23 @@ export default {
         ? presets[this.spring]
         : this.spring
     },
+    realValues () {
+      return this.value != null
+        ? { value: this.value }
+        : this.values
+    },
   },
 
   render (h) {
     return h(this.tag, [
-      this.$scopedSlots.default({
-        value: this.currentValue,
-      }),
+      this.$scopedSlots.default(this.currentValues),
     ])
   },
 
   watch: {
-    value (old, current) {
+    realValues (current, old) {
+      console.log(old, current)
+      console.log(old !== current)
       if (old !== current && !this.wasAnimating) {
         this.prevTime = now()
         this.accumulatedTime = 0
@@ -52,12 +56,23 @@ export default {
     },
   },
 
+  created () {
+    const values = {}
+    const velocities = {}
+    for (const key in this.realValues) {
+      if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
+      values[key] = this.realValues[key]
+      velocities[key] = 0
+    }
+    this.currentValues = values
+    this.currentVelocities = velocities
+  },
+
   mounted () {
-    this.currentValue = this.value
     this.prevTime = now()
     this.accumulatedTime = 0
-    this.idealValue = this.currentValue
-    this.idealVelocity = this.currentVelocity
+    this.idealValues = this.currentValues
+    this.idealVelocities = this.currentVelocities
     this.animate()
   },
 
@@ -65,9 +80,9 @@ export default {
     animate () {
       this.animationId = raf(() => {
         if (shouldStopAnimation(
-          this.currentValue,
-          this.value,
-          this.currentVelocity
+          this.currentValues,
+          this.realValues,
+          this.currentVelocities
         )) {
           if (this.wasAnimating) this.$emit('motion-end')
 
@@ -103,40 +118,49 @@ export default {
           (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
 
-        let newIdealValue = this.idealValue
-        let newIdealVelocity = this.idealVelocity
+        for (const key in this.realValues) {
+          if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
+          let newIdealValue = this.idealValues[key]
+          let newIdealVelocity = this.idealVelocities[key]
+          const value = this.realValues[key]
+          const springConfig = this.springConfig
 
-        // iterate as if the animation took place
-        for (let i = 0; i < framesToCatchUp; i++) {
-          ;[newIdealValue, newIdealVelocity] = stepper(
+          // iterate as if the animation took place
+          for (let i = 0; i < framesToCatchUp; i++) {
+            ;[newIdealValue, newIdealVelocity] = stepper(
+              msPerFrame / 1000,
+              newIdealValue,
+              newIdealVelocity,
+              value,
+              springConfig.stiffness,
+              springConfig.damping,
+              springConfig.precision
+            )
+          }
+
+          const [nextIdealValue, nextIdealVelocity] = stepper(
             msPerFrame / 1000,
             newIdealValue,
             newIdealVelocity,
-            this.value,
-            this.springConfig.stiffness,
-            this.springConfig.damping,
-            this.springConfig.precision
+            value,
+            springConfig.stiffness,
+            springConfig.damping,
+            springConfig.precision
           )
+
+          this.currentValues[key] =
+            newIdealValue +
+            (nextIdealValue - newIdealValue) * currentFrameCompletion
+          this.currentVelocities[key] =
+            newIdealVelocity +
+            (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
+          this.idealValues[key] = newIdealValue
+          this.idealVelocities[key] = newIdealVelocity
         }
 
-        const [nextIdealValue, nextIdealVelocity] = stepper(
-          msPerFrame / 1000,
-          newIdealValue,
-          newIdealVelocity,
-          this.value,
-          this.springConfig.stiffness,
-          this.springConfig.damping,
-          this.springConfig.precision
-        )
-
-        this.currentValue =
-          newIdealValue +
-          (nextIdealValue - newIdealValue) * currentFrameCompletion
-        this.currentVelocity =
-          newIdealVelocity +
-          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
-        this.idealValue = newIdealValue
-        this.idealVelocity = newIdealVelocity
+        console.log(this.currentValues.value)
+        console.log(this.accumulatedTime)
+        console.log(framesToCatchUp)
 
         // out of the update loop
         this.animationID = null
@@ -150,12 +174,16 @@ export default {
   },
 }
 
-function shouldStopAnimation (currentValue, value, currentVelocity) {
-  if (currentVelocity !== 0) return false
+function shouldStopAnimation (currentValues, values, currentVelocities) {
+  for (const key in values) {
+    if (!Object.prototype.hasOwnProperty.call(values, key)) continue
 
-  // stepper will have already taken care of rounding precision errors, so
-  // won't have such thing as 0.9999 !=== 1
-  if (currentValue !== value) return false
+    if (currentVelocities[key] !== 0) return false
+
+    // stepper will have already taken care of rounding precision errors, so
+    // won't have such thing as 0.9999 !=== 1
+    if (currentValues[key] !== values[key]) return false
+  }
 
   return true
 }
