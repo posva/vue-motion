@@ -46,8 +46,6 @@ export default {
 
   watch: {
     realValues (current, old) {
-      console.log(old, current)
-      console.log(old !== current)
       if (old !== current && !this.wasAnimating) {
         this.prevTime = now()
         this.accumulatedTime = 0
@@ -60,6 +58,7 @@ export default {
     const values = {}
     const velocities = {}
     for (const key in this.realValues) {
+      // istanbul ignore if
       if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
       values[key] = this.realValues[key]
       velocities[key] = 0
@@ -71,8 +70,8 @@ export default {
   mounted () {
     this.prevTime = now()
     this.accumulatedTime = 0
-    this.idealValues = this.currentValues
-    this.idealVelocities = this.currentVelocities
+    this.idealValues = { ...this.currentValues }
+    this.idealVelocities = { ...this.currentVelocities }
     this.animate()
   },
 
@@ -119,6 +118,7 @@ export default {
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
 
         for (const key in this.realValues) {
+          // istanbul ignore if
           if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
           let newIdealValue = this.idealValues[key]
           let newIdealVelocity = this.idealVelocities[key]
@@ -138,7 +138,6 @@ export default {
             )
           }
 
-          console.log(`From ${newIdealValue} to ${value} at ${newIdealVelocity}`)
           const [nextIdealValue, nextIdealVelocity] = stepper(
             msPerFrame / 1000,
             newIdealValue,
@@ -159,10 +158,6 @@ export default {
           this.idealVelocities[key] = newIdealVelocity
         }
 
-        console.log(framesToCatchUp)
-        console.log(this.currentValues.value)
-        console.log(this.accumulatedTime)
-
         // out of the update loop
         this.animationID = null
         // the amount we're looped over above
@@ -177,6 +172,7 @@ export default {
 
 function shouldStopAnimation (currentValues, values, currentVelocities) {
   for (const key in values) {
+    // istanbul ignore if
     if (!Object.prototype.hasOwnProperty.call(values, key)) continue
 
     if (currentVelocities[key] !== 0) return false

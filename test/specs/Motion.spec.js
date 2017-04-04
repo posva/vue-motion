@@ -39,7 +39,7 @@ describe('Motion', function () {
     }).default
   })
 
-  it.only('works with perfect time', function (done) {
+  it('works with perfect time', function (done) {
     const vm = createVM(this, `
 <Motion :value="n" :spring="config">
   <template scope="values">
@@ -163,45 +163,17 @@ describe('Motion', function () {
   components: { Motion },
 })
     vm.$('.a').should.have.text('0')
-    vm.$('.b').should.have.text('-10')
     vm.values.a = 10
     nextTick().then(() => {
       this.step()
+      vm.values.b = 0
     }).then(() => {
       vm.$('.a').should.have.text('0.4722222222222222')
       this.step()
     }).then(() => {
       vm.$('.a').should.have.text('1.1897376543209877')
+      vm.$('.b').should.have.text('-9.527777777777779')
       this.stepUntil(() => vm.$('.a').text === '10')
     }).then(done)
-  })
-
-  it.skip('works with jsx', function () {
-    const vm = createVM(this, function (h) {
-      const options = {
-        scopedSlots: {
-          default: values => (
-            <pre>{values}</pre>
-          ),
-        },
-      }
-      return (
-        <Motion value={this.n}
-                spring={this.config}
-                {...options}
-        />
-      )
-    }, {
-      data: {
-        n: 0,
-        config: {
-          stiffness: 170,
-          damping: 26,
-          precision: 0.01,
-        },
-      },
-      components: { Motion },
-    })
-    vm
   })
 })

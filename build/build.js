@@ -31,7 +31,9 @@ function rollupBundle ({ env }) {
       replace(Object.assign({
         __VERSION__: version,
       }, env)),
-      buble(),
+      buble({
+        objectAssign: 'Object.assign',
+      }),
     ],
   })
 }
