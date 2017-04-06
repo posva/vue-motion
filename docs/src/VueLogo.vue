@@ -5,7 +5,7 @@
           @motion-end="end"
   >
     <template scope="props">
-      <div class="logo">
+      <div class="logo" :style="style(props.x)">
         <VueSvg
             :width="256"
             :height="221"
@@ -50,6 +50,13 @@ export default {
       if (this.timer) clearTimeout(this.timer)
       this.rotated += 360
     },
+    style (x) {
+      return {
+        overflow: Math.abs(x) > 10
+                ? 'hidden'
+                : 'initial',
+      }
+    },
   },
 
   computed: {
@@ -78,7 +85,6 @@ export default {
   background-color: white;
   border-radius: 1rem;
   padding: 1.2rem 0;
-  overflow: hidden;
   max-width: 100%;
   width: 480px;
   margin: auto;
