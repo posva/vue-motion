@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-  <title>docs</title>
+  <title>VueMotion docs</title>
   <link rel="stylesheet" href="https://unpkg.com/docute@3/dist/docute.css">
   <style>
   #landing .demo {
@@ -24,10 +24,10 @@
   <script src="./dist/src/App.js"></script>
   <script src="https://unpkg.com/docute@3/dist/docute.js"></script>
   <script>
-  docute.init({
+  window.docute.init({
     landing: {
-      component: Landing
-    }
+      component: window.Landing,
+    },
   })
   </script>
 </body>

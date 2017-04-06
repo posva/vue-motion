@@ -1,106 +1,117 @@
 <template>
-  <div>
-    <Motion :value="n"
-            :spring="config"
-            @motion-start="start"
-            @motion-end="end"
-            @motion-restart="restart"
-    >
-      <template scope="values">
-        <span>Value is</span>
-        <pre>{{ values }}</pre>
-        <div class="demo-container">
-          <div class="demo"
-               :style="{transform: `translate3d(${values.value}px, 0, 0)`}"
-          ></div>
-        </div>
-      </template>
-    </Motion>
+  <div id="app">
+    <h1 class="title">Vue Motion</h1>
+    <h2 class="subtitle">Natural animations for Vue</h2>
 
-    <input v-model.number="n" step="10" type="number" />
-    <br/>
-    <button @click="toggle">Toggle</button>
-    <br/>
-    <label>
-      Stiffness
-      <input v-model.number="config.stiffness" step="10" type="number"/>
-    </label>
-    <br/>
-    <label>
-      Damping
-      <input v-model.number="config.damping" step="1" type="number"/>
-    </label>
-    <br/>
-    <label>
-      Precision
-      <input v-model.number="config.precision" step="0.01" type="number"/>
-    </label>
-    <br/>
-    <button v-for="(preset, name) in presets" @click="setSpring(preset)">{{ name }}</button>
+    <VueLogo/>
+
+
+    <section>
+      <Tabs v-model="currentTab">
+        <Tab :index="0">Playground</Tab>
+        <Tab :index="1">Gallery Example</Tab>
+      </Tabs>
+
+      <Motion tag="div" class="main" :values="tabsPositions">
+        <template scope="tabs">
+          <Playground class="content"
+                      :style="{ transform: `translateX(${tabs.first}px)` }"
+                      ref="first"/>
+          <Gallery class="content"
+                   :style="{ transform: `translateX(${tabs.second}px)` }"
+                   ref="second"/>
+        </template>
+      </Motion>
+
+    </section>
   </div>
 </template>
 
 <script>
-import { Motion } from '../../dist/vue-motion.common.js'
-import presets from '../../src/presets'
+import Motion from '../../src/Motion'
+import VueLogo from './VueLogo'
+import Tab from './Tab'
+import Tabs from './Tabs'
+import Playground from './Playground'
+import Gallery from './Gallery'
 
 export default {
   data () {
     return {
-      n: 0,
-      max: 400,
-      config: {
-        stiffness: 170,
-        damping: 26,
-        precision: 0.01,
-      },
+      currentTab: -1,
     }
   },
 
+  mounted () {
+    this.currentTab = 1
+  },
+
   computed: {
-    presets () {
-      return presets
+    tabsPositions () {
+      this.currentTab
+      if (!this.$el) {
+        return {
+          first: 0,
+          second: 0,
+        }
+      }
+      const first = this.$refs.first
+      const second = this.$refs.second
+      return {
+        first: this.currentTab * -first.$el.offsetWidth,
+        second: (-this.currentTab + 1) * second.$el.offsetWidth,
+      }
     },
   },
 
-  methods: {
-    toggle () {
-      this.n = this.n < this.max / 2
-             ? this.max
-             : 0
-    },
-    setSpring (config) {
-      this.config = config
-      this.config.precision = this.config.precision || 0.01
-    },
-    start () {
-      console.log('---------')
-      console.log('Start')
-      console.time('motion')
-    },
-    end () {
-      console.log('Stop')
-      console.timeEnd('motion')
-      console.log('---------')
-    },
-    restart () {
-      console.log('Restart')
-    },
-  },
-
-  components: { Motion },
+  components: { Motion, VueLogo, Tabs, Tab, Playground, Gallery },
 }
 </script>
 
 <style>
-.demo {
-  width: 100px;
-  height: 100px;
-  background-color: crimson;
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Lato', 'helvetica neue', sans-serif;
 }
-.demo-container {
-  margin-left: 30px;
-  width: 500px;
+
+body {
   background-color: ghostwhite;
+  margin: 0;
+}
+
+#app {
+  padding: 20px;
+}
+
+.title {
+  font-size: 48px;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  text-align: center;
+  color: gray;
+}
+
+.main {
+  position: relative;
+  width: 100%;
+  height: 656px;
+}
+
+.content {
+  position: absolute;
+  background-color: white;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  padding: 1rem;
+  border-radius: .5rem;
+  display: inline-block;
 }
 </style>

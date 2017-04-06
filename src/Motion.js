@@ -14,7 +14,7 @@ export default {
 
   props: {
     value: Number,
-    values: Object,
+    values: [Object, Array],
     tag: {
       type: String,
       default: 'span',
