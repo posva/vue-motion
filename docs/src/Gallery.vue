@@ -21,6 +21,7 @@
               >
                 <img v-for="(photo, i) in photos"
                      class="photo"
+                     @touchstart="next"
                      :style="{ width: `${resizes['w' + i]}px`, height: `${resizes['h' + i]}px` }"
                      :src="photo.src"/>
               </div>
@@ -147,6 +148,7 @@ export default {
   position: relative;
   overflow: hidden;
   margin: auto;
+  max-width: 100%;
 }
 
 .photos {

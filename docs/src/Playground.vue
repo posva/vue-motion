@@ -48,7 +48,7 @@ export default {
   data () {
     return {
       n: 0,
-      max: 400,
+      max: 200,
       config: {
         stiffness: 170,
         damping: 26,
@@ -106,8 +106,7 @@ export default {
 }
 
 .demo-container {
-  margin-left: 30px;
-  width: 500px;
+  width: 300px;
   background-color: lightgray;
 }
 </style>
