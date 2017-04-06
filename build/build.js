@@ -45,11 +45,13 @@ const bundleOptions = {
   moduleName,
 }
 
-function createBundle ({ name, env }) {
+function createBundle ({ name, env, format }) {
   return rollupBundle({
     env,
   }).then(function (bundle) {
-    const code = bundle.generate(bundleOptions).code
+    const options = Object.assign({}, bundleOptions)
+    if (format) options.format = format
+    const code = bundle.generate(options).code
     if (/min$/.test(name)) {
       const minified = uglify.minify(code, {
         fromString: true,
@@ -78,6 +80,15 @@ createBundle({
 createBundle({
   name: `${name}.common`,
   env: {},
+  format: 'cjs',
+})
+
+// uses export and import syntax. Should be used with modern bundlers
+// like rollup and webpack 2
+createBundle({
+  name: `${name}.esm`,
+  env: {},
+  format: 'es',
 })
 
 // Minified version for browser
