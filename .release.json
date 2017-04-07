@@ -1,6 +1,4 @@
 {
-  "tagName": "v%s",
-  "commitMessage": "🔖 %s",
   "buildCommand": "yarn build && yarn docs",
   "github": {
     "release": true,
@@ -9,6 +7,10 @@
   },
   "npm": {
     "publish": true
+  },
+  "src": {
+    "commitMessage": "🔖 %s",
+    "tagName": "v%s"
   },
   "changelogCommand": "git log --pretty=format:'* %s (%h)' [REV_RANGE]"
 }
