@@ -66,6 +66,14 @@ get access to the transitioning value in the scope with that same key: `value`.
 </Motion>
 ```
 
+Then just set the value as you would normally do. `Motion` will take care of the
+rest 🙂:
+
+```js
+// in the component
+this.offset = 200
+```
+
 ##### Multiple values
 
 When transitioning a group of values, pass down an object or array (will be
