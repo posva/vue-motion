@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <h1 class="title">Vue Motion</h1>
-    <h2 class="subtitle">Natural animations for Vue</h2>
+  <div id="app" class="landing">
+    <h1 class="landing__title">Vue Motion</h1>
+    <h2 class="landing__subtitle">Natural animations for Vue</h2>
 
     <VueLogo/>
 
@@ -12,12 +12,12 @@
         <Tab :index="1">Gallery Example</Tab>
       </Tabs>
 
-      <Motion tag="div" class="main" :values="tabsPositions">
+      <Motion tag="div" class="landing__main" :values="tabsPositions">
         <template scope="tabs">
-          <Playground class="content"
+          <Playground class="landing__content"
                       :style="{ transform: `translateX(${tabs.first}px)` }"
                       ref="first"/>
-          <Gallery class="content"
+          <Gallery class="landing__content"
                    :style="{ transform: `translateX(${tabs.second}px)` }"
                    ref="second"/>
         </template>
@@ -81,30 +81,30 @@ body {
   margin: 0;
 }
 
-#app {
+.landing {
   padding: 20px;
   overflow-x: hidden;
 }
 
-.title {
+.landing__title {
   font-size: 48px;
   margin: 1rem 0;
   text-align: center;
 }
 
-.subtitle {
+.landing__subtitle {
   font-size: 1.1rem;
   text-align: center;
   color: gray;
 }
 
-.main {
+.landing__main {
   position: relative;
   width: 100%;
   height: 656px;
 }
 
-.content {
+.landing__content {
   position: absolute;
   background-color: white;
   left: 0;

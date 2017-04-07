@@ -38,6 +38,7 @@ export default {
   margin: 0 .3rem;
   border-radius: 0.3rem;
   background-color: #ddd;
+  user-select: none;
 }
 
 .tabs__tab:not(.tabs__tab--active):hover {
