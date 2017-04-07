@@ -1,5 +1,5 @@
 /*!
- * vue-motion v0.1.3
+ * vue-motion v0.1.4
  * (c) 2017 Eduardo San Martin Morote
  * Released under the MIT License.
  */
@@ -56,10 +56,10 @@ function stepper (
 
 /* @flow */
 var presets = {
-  noWobble: { stiffness: 170, damping: 26 }, // the default, if nothing provided
-  gentle: { stiffness: 120, damping: 14 },
-  wobbly: { stiffness: 180, damping: 12 },
-  stiff: { stiffness: 210, damping: 20 },
+  noWobble: { stiffness: 170, damping: 26, precision: 0.01 }, // the default, if nothing provided
+  gentle: { stiffness: 120, damping: 14, precision: 0.01 },
+  wobbly: { stiffness: 180, damping: 12, precision: 0.01 },
+  stiff: { stiffness: 210, damping: 20, precision: 0.01 },
 };
 
 var raf = window.requestAnimationFrame.bind(window);
@@ -70,15 +70,14 @@ var msPerFrame = 1000 / 60;
 var Motion = {
   data: function data () {
     return {
-      currentValue: 0,
-      currentVelocity: 0,
+      currentValues: null,
+      currentVelocities: null,
     }
   },
 
   props: {
-    value: {
-      type: Number,
-    },
+    value: Number,
+    values: [Object, Array],
     tag: {
       type: String,
       default: 'span',
@@ -95,17 +94,20 @@ var Motion = {
         ? presets[this.spring]
         : this.spring
     },
+    realValues: function realValues () {
+      return this.value != null
+        ? { value: this.value }
+        : this.values
+    },
   },
 
   render: function render (h) {
     return h(this.tag, [
-      this.$scopedSlots.default({
-        value: this.currentValue,
-      }) ])
+      this.$scopedSlots.default(this.currentValues) ])
   },
 
   watch: {
-    value: function value (old, current) {
+    realValues: function realValues (current, old) {
       if (old !== current && !this.wasAnimating) {
         this.prevTime = now();
         this.accumulatedTime = 0;
@@ -114,12 +116,26 @@ var Motion = {
     },
   },
 
+  created: function created () {
+    var this$1 = this;
+
+    var values = {};
+    var velocities = {};
+    for (var key in this$1.realValues) {
+      // istanbul ignore if
+      if (!Object.prototype.hasOwnProperty.call(this$1.realValues, key)) { continue }
+      values[key] = this$1.realValues[key];
+      velocities[key] = 0;
+    }
+    this.currentValues = values;
+    this.currentVelocities = velocities;
+  },
+
   mounted: function mounted () {
-    this.currentValue = this.value;
     this.prevTime = now();
     this.accumulatedTime = 0;
-    this.idealValue = this.currentValue;
-    this.idealVelocity = this.currentVelocity;
+    this.idealValues = Object.assign({}, this.currentValues);
+    this.idealVelocities = Object.assign({}, this.currentVelocities);
     this.animate();
   },
 
@@ -129,9 +145,9 @@ var Motion = {
 
       this.animationId = raf(function () {
         if (shouldStopAnimation(
-          this$1.currentValue,
-          this$1.value,
-          this$1.currentVelocity
+          this$1.currentValues,
+          this$1.realValues,
+          this$1.currentVelocities
         )) {
           if (this$1.wasAnimating) { this$1.$emit('motion-end'); }
 
@@ -167,43 +183,49 @@ var Motion = {
           (this$1.accumulatedTime - Math.floor(this$1.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame;
         var framesToCatchUp = Math.floor(this$1.accumulatedTime / msPerFrame);
 
-        var newIdealValue = this$1.idealValue;
-        var newIdealVelocity = this$1.idealVelocity;
+        for (var key in this$1.realValues) {
+          // istanbul ignore if
+          if (!Object.prototype.hasOwnProperty.call(this$1.realValues, key)) { continue }
+          var newIdealValue = this$1.idealValues[key];
+          var newIdealVelocity = this$1.idealVelocities[key];
+          var value = this$1.realValues[key];
+          var springConfig = this$1.springConfig;
 
-        // iterate as if the animation took place
-        for (var i = 0; i < framesToCatchUp; i++) {
-          var assign;
-          (assign = stepper(
+          // iterate as if the animation took place
+          for (var i = 0; i < framesToCatchUp; i++) {
+            var assign;
+            (assign = stepper(
+              msPerFrame / 1000,
+              newIdealValue,
+              newIdealVelocity,
+              value,
+              springConfig.stiffness,
+              springConfig.damping,
+              springConfig.precision
+            ), newIdealValue = assign[0], newIdealVelocity = assign[1]);
+          }
+
+          var ref = stepper(
             msPerFrame / 1000,
             newIdealValue,
             newIdealVelocity,
-            this$1.value,
-            this$1.springConfig.stiffness,
-            this$1.springConfig.damping,
-            this$1.springConfig.precision
-          ), newIdealValue = assign[0], newIdealVelocity = assign[1]);
+            value,
+            springConfig.stiffness,
+            springConfig.damping,
+            springConfig.precision
+          );
+          var nextIdealValue = ref[0];
+          var nextIdealVelocity = ref[1];
+
+          this$1.currentValues[key] =
+            newIdealValue +
+            (nextIdealValue - newIdealValue) * currentFrameCompletion;
+          this$1.currentVelocities[key] =
+            newIdealVelocity +
+            (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion;
+          this$1.idealValues[key] = newIdealValue;
+          this$1.idealVelocities[key] = newIdealVelocity;
         }
-
-        var ref = stepper(
-          msPerFrame / 1000,
-          newIdealValue,
-          newIdealVelocity,
-          this$1.value,
-          this$1.springConfig.stiffness,
-          this$1.springConfig.damping,
-          this$1.springConfig.precision
-        );
-        var nextIdealValue = ref[0];
-        var nextIdealVelocity = ref[1];
-
-        this$1.currentValue =
-          newIdealValue +
-          (nextIdealValue - newIdealValue) * currentFrameCompletion;
-        this$1.currentVelocity =
-          newIdealVelocity +
-          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion;
-        this$1.idealValue = newIdealValue;
-        this$1.idealVelocity = newIdealVelocity;
 
         // out of the update loop
         this$1.animationID = null;
@@ -217,12 +239,17 @@ var Motion = {
   },
 };
 
-function shouldStopAnimation (currentValue, value, currentVelocity) {
-  if (currentVelocity !== 0) { return false }
+function shouldStopAnimation (currentValues, values, currentVelocities) {
+  for (var key in values) {
+    // istanbul ignore if
+    if (!Object.prototype.hasOwnProperty.call(values, key)) { continue }
 
-  // stepper will have already taken care of rounding precision errors, so
-  // won't have such thing as 0.9999 !=== 1
-  if (currentValue !== value) { return false }
+    if (currentVelocities[key] !== 0) { return false }
+
+    // stepper will have already taken care of rounding precision errors, so
+    // won't have such thing as 0.9999 !=== 1
+    if (currentValues[key] !== values[key]) { return false }
+  }
 
   return true
 }
@@ -236,7 +263,7 @@ if (typeof window !== 'undefined' && window.Vue) {
   window.Vue.use(plugin);
 }
 
-var version = '0.1.3';
+var version = '0.1.4';
 
 exports['default'] = plugin;
 exports.Motion = Motion;

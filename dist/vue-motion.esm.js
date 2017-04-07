@@ -4,10 +4,6 @@
  * Released under the MIT License.
  */
 
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
 /* @flow */
 
 // stepper is used a lot. Saves allocation to return the same array wrapper.
@@ -263,6 +259,4 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 var version = '0.1.4';
 
-exports['default'] = plugin;
-exports.Motion = Motion;
-exports.version = version;
+export { Motion, version };export default plugin;
