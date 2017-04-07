@@ -39,6 +39,7 @@ export default {
   border-radius: 0.3rem;
   background-color: #ddd;
   user-select: none;
+  font-size: 1rem;
 }
 
 .tabs__tab:not(.tabs__tab--active):hover {

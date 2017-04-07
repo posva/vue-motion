@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="landing">
+  <div class="landing">
     <h1 class="landing__title">Vue Motion</h1>
     <h2 class="landing__subtitle">Natural animations for Vue</h2>
 
@@ -11,6 +11,10 @@
         <Tab :index="0">Playground</Tab>
         <Tab :index="1">Gallery Example</Tab>
       </Tabs>
+
+      <div class="landing__docs-link">
+        <a href="#/home">Documentation</a>
+      </div>
 
       <Motion tag="div" class="landing__main" :values="tabsPositions">
         <template scope="tabs">
@@ -44,6 +48,7 @@ export default {
 
   mounted () {
     this.currentTab = 1
+    document.body.style.backgroundColor = 'ghostwhite'
   },
 
   computed: {
@@ -68,7 +73,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
 * {
@@ -76,12 +81,8 @@ export default {
   font-family: 'Lato', 'helvetica neue', sans-serif;
 }
 
-body {
-  background-color: ghostwhite;
-  margin: 0;
-}
-
 .landing {
+  background-color: ghostwhite;
   padding: 20px;
   overflow-x: hidden;
 }
@@ -114,5 +115,10 @@ body {
   padding: 1rem;
   border-radius: .5rem;
   display: inline-block;
+}
+
+.landing__docs-link {
+  text-align: center;
+  margin-bottom: .7rem;
 }
 </style>
