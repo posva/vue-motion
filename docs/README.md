@@ -1,3 +1,120 @@
-# docute
+# Vue Motion
 
-just start writing...
+> Natural animations in Vue
+
+Vue Motion uses springs to generate smooth and natural transition between
+numerical values. This allows you to create smooth animations that feels natural
+and that automatically adapt to its target value. These kind of _animations_ can
+help with **fluid** interfaces.
+
+## Installation
+
+You can install Vue Motion as any other plugin:
+
+### Bundlers
+
+```js
+import Vue from 'vue'
+import VueMotion from 'vue-motion'
+
+Vue.use(VueMotion)
+```
+
+### Browsers
+
+```html
+<!-- Vue Motion auto installs when included after Vue -->
+<script src="https://unpkg.com/vue-motion"></script>
+```
+
+This will give you global access to all components.
+
+### Local import
+
+If you don't want to globally install the components, you can import them locally,
+and even give them different names:
+
+```js
+import { Motion } from 'vue-motion'
+
+export default {
+  components: { MyMotion: Motion },
+}
+```
+
+## Components
+
+### Motion
+
+`Motion` is the main component that allows you to transition a single value or a
+group of values. You simply give it a value and it will give you access to the
+transitioning value in a scoped slot.
+
+
+#### Examples
+
+##### Single Value
+
+When transitioning a single value, pass it down with the `value` prop. You then
+get access to the transitioning value in the scope with that same key: `value`.
+
+```html
+<Motion :value="offset">
+  <template scope="props">
+    <div :style="{ transform: `translateX(${props.value}px)` }"></div>
+  </template>
+</Motion>
+```
+
+##### Multiple values
+
+When transitioning a group of values, pass down an object or array (will be
+converted to an object) to the `values` prop (with an _s_). You'll get access to
+the transitioning values in the scope with the original keys.
+
+```html
+<Motion :values="size">
+  <template scope="_size">
+    <div :style="{ width: _size.width, height: _size.height }"></div>
+  </template>
+</Motion>
+```
+
+##### Props
+
+|Name|Type|Required|Default|Comments|
+|----|----|--------|-------|--------|
+|`value`|`Number`|only when `values` is not provided||Actual value to transition after|
+|`values`|`Object` or `Array`|only when `value` is not provided||It contains multiple values to transition after|
+|`tag`|`String`|No|`span`|Allows you to define the container element's tag|
+|`spring`|`Object` or `String`|No|`noWobble`|Defines how the transition behaves. Default to a non-wobbly spring that is used in the examples. Check the _Playground_ in the <a href="#/">Demo</a> |
+
+When setting the `spring` on a motion, you can use any of the predefined [springs](#springs).
+
+## Springs
+
+Internally, Vue Motion uses springs to transition values. A spring is defined by
+its `stiffness` and its `damping`. Additionally, it's also takes a `precision`
+value, used for calculations. These are the predefined springs:
+
+|Name|Stiffness|Damping|
+|----|---------|-------|
+|noWobble|170|26|
+|gentle|120|14|
+|wobbly|180|12|
+|stiff|210 |20|
+
+The easiest way to find the kind of animation you want, is to play around with
+values. Use the _Playground_ in the <a href="#/">Demo</a> for that.
+
+<p class="warning">
+All springs have a `0.01` precision which is enough for animations to look good.
+</p>
+
+## Version
+
+You can accesse the current version of the package with
+
+```js
+import { version } from 'vue-motion'
+```
