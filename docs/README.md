@@ -91,6 +91,15 @@ the transitioning values in the scope with the original keys.
 
 When setting the `spring` on a motion, you can use any of the predefined [springs](#springs).
 
+##### Events
+
+- `motion-start`: Emitted when a new transition starts (basically when the value
+  changes and there was no transition occurring)
+- `motion-end`: Emitted when a transition finishes
+- `motion-restart`: Emitted when a transition restart. This may happen when the
+  animations takes too long to complete (slow frame) or when the user switches
+  to another tab and comes back after a while.
+
 ## Springs
 
 Internally, Vue Motion uses springs to transition values. A spring is defined by
