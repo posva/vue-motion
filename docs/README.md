@@ -80,7 +80,7 @@ the transitioning values in the scope with the original keys.
 </Motion>
 ```
 
-##### Props
+#### Props
 
 |Name|Type|Required|Default|Comments|
 |----|----|--------|-------|--------|
@@ -91,7 +91,7 @@ the transitioning values in the scope with the original keys.
 
 When setting the `spring` on a motion, you can use any of the predefined [springs](#springs).
 
-##### Events
+#### Events
 
 - `motion-start`: Emitted when a new transition starts (basically when the value
   changes and there was no transition occurring)
