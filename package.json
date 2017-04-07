@@ -13,8 +13,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "node build/build.js",
-    "predocs": "cd docs && rimraf dist static",
-    "docs": "cd docs && vue build src/App.vue --lib Landing --prod && mv dist/static .",
+    "predocs": "cd docs && rimraf dist",
+    "docs": "cd docs && vue build src/App.vue --lib Landing --prod",
     "docs:dev": "npm-run-parallel docs:build docs:serve",
     "docs:build": "cd docs && vue build src/App.vue",
     "docs:serve": "docute docs",
