@@ -1,8 +1,10 @@
 <template>
   <div>
-    <button @click="previous">Previous</button>
-    <input type="range" v-model="current" min="0" :max="photos.length - 1"/>
-    <button @click="next">Next</button>
+    <div class="controls">
+      <button @click="previous">Previous</button>
+      <input type="range" v-model="current" min="0" :max="photos.length - 1"/>
+      <button @click="next">Next</button>
+    </div>
     <div class="demo">
       <Motion :values="sizesNormalized"
               tag="div"
@@ -154,5 +156,17 @@ export default {
 .photos {
   position: absolute;
   white-space: nowrap;
+}
+
+.controls {
+  display: flex;
+  max-width: 500px;
+}
+
+.controls button {
+  flex: 1;
+}
+.controls input {
+  flex: 3;
 }
 </style>

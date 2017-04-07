@@ -83,6 +83,7 @@ body {
 
 #app {
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .title {
