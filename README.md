@@ -5,110 +5,19 @@
 
 > Easy and natural state transitions
 
-## Installation
+## Documentation
+
+Check out the docs [here](https://posva.net/vue-motion/#/home) and
+the [Demo](https://posva.net/vue-motion)
 
 ```bash
 npm install --save vue-motion
 ```
 
-## Usage
-
-### Bundler (Webpack, Rollup)
-
-```js
-import Vue from 'vue'
-import VueMotion from 'vue-motion'
-
-Vue.use(VueMotion)
-```
-
-### Browser
-
-```html
-<!-- Include after Vue -->
-<!-- Local files -->
-<script src="vue-motion/dist/vue-motion.js"></script>
-
-<!-- From CDN -->
-<script src="https://unpkg.com/vue-motion"></script>
-```
-
-### Components
-
-#### Motion
-
-Motion allows you to transition a single value or a group of values:
-
-```vue
-<template>
-  <Motion :value="x">
-    <template scope="values">
-      <div class="container">
-        <div class="box"
-             :style="{transform: `translate3d(${values.default}px, 0, 0)`}"
-        ></div>
-      </div>
-    </template>
-  </Motion>
-</template>
-
-<script>
-export default {
-  data () {
-    return {
-      x: 0,
-    }
-  },
-  
-  created () {
-    // Make the block move at creation
-    this.x = 400
-  },
-}
-</script>
-```
-
-##### Events
-
-- `motion-start`: Emitted when a given value change and a new motion starts
-- `motion-end`: Emitted when a motion ends
-
 ## Development
-
-### Launch visual tests
 
 ```bash
 npm run dev
-```
-
-### Launch Karma with coverage
-
-```bash
-npm run dev:coverage
-```
-
-### Build
-
-Bundle the js and css of to the `dist` folder:
-
-```bash
-npm run build
-```
-
-
-## Publishing
-
-The `prepublish` hook will ensure dist files are created before publishing. This
-way you don't need to commit them in your repository.
-
-```bash
-# Bump the version first
-# It'll also commit it and create a tag
-npm version
-# Push the bumped package and tags
-git push --follow-tags
-# Ship it 🚀
-npm publish
 ```
 
 ## License
