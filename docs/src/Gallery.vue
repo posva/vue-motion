@@ -39,6 +39,8 @@
 import Motion from '../../src/Motion'
 import PhotosContainer from './PhotosContainer'
 
+const base = 'https://github.com/posva/vue-motion/raw/master/docs/static/'
+
 export default {
   data () {
     return {
@@ -69,27 +71,27 @@ export default {
         {
           width: 300,
           height: 450,
-          src: require('./img/cat1.jpg'),
+          src: `${base}cat1.jpg`,
         },
         {
           width: 500,
           height: 390,
-          src: require('./img/cat2.jpg'),
+          src: `${base}cat2.jpg`,
         },
         {
           width: 500,
           height: 330,
-          src: require('./img/cat3.jpg'),
+          src: `${base}cat3.jpg`,
         },
         {
           width: 491,
           height: 251,
-          src: require('./img/cat4.jpg'),
+          src: `${base}cat4.jpg`,
         },
         {
           width: 447,
           height: 500,
-          src: require('./img/cat5.jpg'),
+          src: `${base}cat5.jpg`,
         },
         {
           width: 320,
