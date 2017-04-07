@@ -24,7 +24,7 @@
     "pretest": "yon run lint",
     "test": "cross-env BABEL_ENV=test karma start test/karma.conf.js --single-run",
     "dev": "cross-env BABEL_ENV=test karma start test/karma.conf.js",
-    "release:docs": "yon docs && git add docs/dist && git commit -m '📦 Bundle docs'"
+    "release:docs": "yon docs && git add docs/dist && git commit -m '📦 Bundle docs Demo'"
   },
   "lint-staged": {
     "*.{vue,jsx,js}": [
