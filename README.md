@@ -7,7 +7,7 @@
 
 ## Documentation
 
-Check out the docs [here](https://posva.net/vue-motion/#/home) and
+Check out the [docs](https://posva.net/vue-motion/#/home) and
 the [Demo](https://posva.net/vue-motion)
 
 ```bash
