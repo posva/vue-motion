@@ -116,47 +116,18 @@ export default {
         const currentFrameCompletion =
           (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
+        const springConfig = this.springConfig
 
-        for (const key in this.realValues) {
-          // istanbul ignore if
-          if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
-          let newIdealValue = this.idealValues[key]
-          let newIdealVelocity = this.idealVelocities[key]
-          const value = this.realValues[key]
-          const springConfig = this.springConfig
-
-          // iterate as if the animation took place
-          for (let i = 0; i < framesToCatchUp; i++) {
-            ;[newIdealValue, newIdealVelocity] = stepper(
-              msPerFrame / 1000,
-              newIdealValue,
-              newIdealVelocity,
-              value,
-              springConfig.stiffness,
-              springConfig.damping,
-              springConfig.precision
-            )
-          }
-
-          const [nextIdealValue, nextIdealVelocity] = stepper(
-            msPerFrame / 1000,
-            newIdealValue,
-            newIdealVelocity,
-            value,
-            springConfig.stiffness,
-            springConfig.damping,
-            springConfig.precision
-          )
-
-          this.currentValues[key] =
-            newIdealValue +
-            (nextIdealValue - newIdealValue) * currentFrameCompletion
-          this.currentVelocities[key] =
-            newIdealVelocity +
-            (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
-          this.idealValues[key] = newIdealValue
-          this.idealVelocities[key] = newIdealVelocity
-        }
+        this.animateValues(
+          currentFrameCompletion,
+          framesToCatchUp,
+          springConfig,
+          this.realValues,
+          this.currentValues,
+          this.currentVelocities,
+          this.idealValues,
+          this.idealVelocities
+        )
 
         // out of the update loop
         this.animationID = null
@@ -166,6 +137,48 @@ export default {
         // keep going!
         this.animate()
       })
+    },
+
+    animateValues (currentFrameCompletion, framesToCatchUp, springConfig, realValues, currentValues, currentVelocities, idealValues, idealVelocities) {
+      for (const key in realValues) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
+        let newIdealValue = idealValues[key]
+        let newIdealVelocity = idealVelocities[key]
+        const value = realValues[key]
+
+        // iterate as if the animation took place
+        for (let i = 0; i < framesToCatchUp; i++) {
+          ;[newIdealValue, newIdealVelocity] = stepper(
+            msPerFrame / 1000,
+            newIdealValue,
+            newIdealVelocity,
+            value,
+            springConfig.stiffness,
+            springConfig.damping,
+            springConfig.precision
+          )
+        }
+
+        const [nextIdealValue, nextIdealVelocity] = stepper(
+          msPerFrame / 1000,
+          newIdealValue,
+          newIdealVelocity,
+          value,
+          springConfig.stiffness,
+          springConfig.damping,
+          springConfig.precision
+        )
+
+        currentValues[key] =
+          newIdealValue +
+          (nextIdealValue - newIdealValue) * currentFrameCompletion
+        currentVelocities[key] =
+          newIdealVelocity +
+          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
+        idealValues[key] = newIdealValue
+        idealVelocities[key] = newIdealVelocity
+      }
     },
   },
 }
