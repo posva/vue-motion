@@ -67,8 +67,20 @@ export default {
   mounted () {
     this.prevTime = now()
     this.accumulatedTime = 0
-    this.idealValues = { ...this.currentValues }
-    this.idealVelocities = { ...this.currentVelocities }
+
+    const idealValues = {}
+    const idealVelocities = {}
+
+    this.defineIdealValues(
+      this.currentValues,
+      this.currentVelocities,
+      idealValues,
+      idealVelocities
+    )
+
+    this.idealValues = idealValues
+    this.idealVelocities = idealVelocities
+
     this.animate()
   },
 
@@ -80,6 +92,16 @@ export default {
 
         values[key] = realValues[key]
         velocities[key] = 0
+      }
+    },
+
+    defineIdealValues (currentValues, currentVelocities, idealValues, idealVelocities) {
+      for (const key in currentValues) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(currentValues, key)) continue
+
+        idealValues[key] = currentValues[key]
+        idealVelocities[key] = currentVelocities[key]
       }
     },
 
