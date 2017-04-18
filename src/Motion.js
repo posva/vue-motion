@@ -55,80 +55,55 @@ export default {
   },
 
   created () {
-    const values = {}
-    const velocities = {}
+    const current = this.defineInitialValues(this.realValues, null)
 
-    this.defineIntialValues(this.realValues, values, velocities)
-
-    this.currentValues = values
-    this.currentVelocities = velocities
+    this.currentValues = current.values
+    this.currentVelocities = current.velocities
   },
 
   mounted () {
     this.prevTime = now()
     this.accumulatedTime = 0
 
-    const idealValues = {}
-    const idealVelocities = {}
+    const ideal = this.defineInitialValues(this.currentValues, this.currentVelocities)
 
-    this.defineIdealValues(
-      this.currentValues,
-      this.currentVelocities,
-      idealValues,
-      idealVelocities
-    )
-
-    this.idealValues = idealValues
-    this.idealVelocities = idealVelocities
+    this.idealValues = ideal.values
+    this.idealVelocities = ideal.velocities
 
     this.animate()
   },
 
   methods: {
-    defineIntialValues (realValues, values, velocities) {
-      for (const key in realValues) {
-        // istanbul ignore if
-        if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
+    defineInitialValues (values, velocities) {
+      const newValues = {}
+      const newVelocities = {}
 
-        if (isArray(realValues[key]) || isObject(realValues[key])) {
-          values[key] = {}
-          velocities[key] = {}
+      this.defineValues(values, velocities, newValues, newVelocities)
 
-          this.defineIntialValues(
-            realValues[key],
-            values[key],
-            velocities[key]
-          )
-
-          continue
-        }
-
-        values[key] = realValues[key]
-        velocities[key] = 0
-      }
+      return { values: newValues, velocities: newVelocities }
     },
 
-    defineIdealValues (currentValues, currentVelocities, idealValues, idealVelocities) {
-      for (const key in currentValues) {
+    defineValues (values, velocities, newValues, newVelocities) {
+      for (const key in values) {
         // istanbul ignore if
-        if (!Object.prototype.hasOwnProperty.call(currentValues, key)) continue
+        if (!Object.prototype.hasOwnProperty.call(values, key)) continue
 
-        if (isArray(currentValues[key]) || isObject(currentValues[key])) {
-          idealValues[key] = {}
-          idealVelocities[key] = {}
+        if (isArray(values[key]) || isObject(values[key])) {
+          newValues[key] = {}
+          newVelocities[key] = {}
 
-          this.defineIdealValues(
-            currentValues[key],
-            currentVelocities[key],
-            idealValues[key],
-            idealVelocities[key]
+          this.defineValues(
+            values[key],
+            velocities ? velocities[key] : null,
+            newValues[key],
+            newVelocities[key]
           )
 
           continue
         }
 
-        idealValues[key] = currentValues[key]
-        idealVelocities[key] = currentVelocities[key]
+        newValues[key] = values[key]
+        newVelocities[key] = velocities ? velocities[key] : 0
       }
     },
 
