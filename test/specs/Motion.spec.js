@@ -126,6 +126,35 @@ describe('Motion', function () {
     }).then(done)
   })
 
+  it('can define custom presets for springs', function (done) {
+    presets.custom = {
+      stiffness: 10,
+      damping: 20,
+      precision: 0.03,
+    }
+
+    const vm = createVM(this, `
+<Motion ref="motion" :value="n" :spring="spring">
+  <template scope="values">
+    <pre>{{ values.value }}</pre>
+  </template>
+</Motion>
+`, {
+  data: {
+    n: 0,
+    spring: 'noWobble',
+  },
+  components: { Motion },
+})
+    vm.$refs.motion.springConfig.should.eql(presets.noWobble)
+    vm.spring = 'custom'
+    nextTick().then(() => {
+      vm.$refs.motion.springConfig.should.eql(presets.custom)
+
+      delete presets.custom
+    }).then(done)
+  })
+
   it('uses noWobble by default as the spring', function () {
     const vm = createVM(this, `
 <Motion ref="motion" :value="n">
