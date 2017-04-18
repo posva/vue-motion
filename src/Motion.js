@@ -173,11 +173,10 @@ export default {
           (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
         const springConfig = this.springConfig
+        const state = { currentFrameCompletion, framesToCatchUp, springConfig }
 
         this.animateValues(
-          currentFrameCompletion,
-          framesToCatchUp,
-          springConfig,
+          state,
           this.realValues,
           this.currentValues,
           this.currentVelocities,
@@ -195,16 +194,14 @@ export default {
       })
     },
 
-    animateValues (currentFrameCompletion, framesToCatchUp, springConfig, realValues, currentValues, currentVelocities, idealValues, idealVelocities) {
+    animateValues (state, realValues, currentValues, currentVelocities, idealValues, idealVelocities) {
       for (const key in realValues) {
         // istanbul ignore if
         if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
 
         if (isArray(realValues[key]) || isObject(realValues[key])) {
           this.animateValues(
-            currentFrameCompletion,
-            framesToCatchUp,
-            springConfig,
+            state,
             realValues[key],
             currentValues[key],
             currentVelocities[key],
@@ -220,15 +217,15 @@ export default {
         const value = realValues[key]
 
         // iterate as if the animation took place
-        for (let i = 0; i < framesToCatchUp; i++) {
+        for (let i = 0; i < state.framesToCatchUp; i++) {
           ;[newIdealValue, newIdealVelocity] = stepper(
             msPerFrame / 1000,
             newIdealValue,
             newIdealVelocity,
             value,
-            springConfig.stiffness,
-            springConfig.damping,
-            springConfig.precision
+            state.springConfig.stiffness,
+            state.springConfig.damping,
+            state.springConfig.precision
           )
         }
 
@@ -237,17 +234,17 @@ export default {
           newIdealValue,
           newIdealVelocity,
           value,
-          springConfig.stiffness,
-          springConfig.damping,
-          springConfig.precision
+          state.springConfig.stiffness,
+          state.springConfig.damping,
+          state.springConfig.precision
         )
 
         currentValues[key] =
           newIdealValue +
-          (nextIdealValue - newIdealValue) * currentFrameCompletion
+          (nextIdealValue - newIdealValue) * state.currentFrameCompletion
         currentVelocities[key] =
           newIdealVelocity +
-          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
+          (nextIdealVelocity - newIdealVelocity) * state.currentFrameCompletion
         idealValues[key] = newIdealValue
         idealVelocities[key] = newIdealVelocity
       }
