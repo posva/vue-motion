@@ -1,6 +1,6 @@
 import stepper from './stepper'
 import presets from './presets'
-import { raf, now } from './utils'
+import { raf, now, isArray, isObject } from './utils'
 
 const msPerFrame = 1000 / 60
 
@@ -90,6 +90,19 @@ export default {
         // istanbul ignore if
         if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
 
+        if (isArray(realValues[key]) || isObject(realValues[key])) {
+          values[key] = {}
+          velocities[key] = {}
+
+          this.defineIntialValues(
+            realValues[key],
+            values[key],
+            velocities[key]
+          )
+
+          continue
+        }
+
         values[key] = realValues[key]
         velocities[key] = 0
       }
@@ -99,6 +112,20 @@ export default {
       for (const key in currentValues) {
         // istanbul ignore if
         if (!Object.prototype.hasOwnProperty.call(currentValues, key)) continue
+
+        if (isArray(currentValues[key]) || isObject(currentValues[key])) {
+          idealValues[key] = {}
+          idealVelocities[key] = {}
+
+          this.defineIdealValues(
+            currentValues[key],
+            currentVelocities[key],
+            idealValues[key],
+            idealVelocities[key]
+          )
+
+          continue
+        }
 
         idealValues[key] = currentValues[key]
         idealVelocities[key] = currentVelocities[key]
@@ -172,6 +199,22 @@ export default {
       for (const key in realValues) {
         // istanbul ignore if
         if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
+
+        if (isArray(realValues[key]) || isObject(realValues[key])) {
+          this.animateValues(
+            currentFrameCompletion,
+            framesToCatchUp,
+            springConfig,
+            realValues[key],
+            currentValues[key],
+            currentVelocities[key],
+            idealValues[key],
+            idealVelocities[key]
+          )
+
+          continue
+        }
+
         let newIdealValue = idealValues[key]
         let newIdealVelocity = idealVelocities[key]
         const value = realValues[key]
@@ -216,6 +259,12 @@ function shouldStopAnimation (currentValues, values, currentVelocities) {
   for (const key in values) {
     // istanbul ignore if
     if (!Object.prototype.hasOwnProperty.call(values, key)) continue
+
+    if (isArray(values[key]) || isObject(values[key])) {
+      if (shouldStopAnimation(currentValues[key], values[key], currentVelocities[key])) {
+        return true
+      }
+    }
 
     if (currentVelocities[key] !== 0) return false
 
