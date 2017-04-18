@@ -39,8 +39,8 @@ describe('Motion', function () {
       './utils': {
         raf: this.raf,
         now: this.now,
-        isArray: isArray,
-        isObject: isObject,
+        isArray,
+        isObject,
       },
     }).default
   })
