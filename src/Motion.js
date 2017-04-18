@@ -57,12 +57,9 @@ export default {
   created () {
     const values = {}
     const velocities = {}
-    for (const key in this.realValues) {
-      // istanbul ignore if
-      if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
-      values[key] = this.realValues[key]
-      velocities[key] = 0
-    }
+
+    this.defineIntialValues(this.realValues, values, velocities)
+
     this.currentValues = values
     this.currentVelocities = velocities
   },
@@ -76,6 +73,16 @@ export default {
   },
 
   methods: {
+    defineIntialValues (realValues, values, velocities) {
+      for (const key in realValues) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
+
+        values[key] = realValues[key]
+        velocities[key] = 0
+      }
+    },
+
     animate () {
       this.animationId = raf(() => {
         if (shouldStopAnimation(
