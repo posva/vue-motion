@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build && yarn docs",
+  "buildCommand": "yarn build",
   "github": {
     "release": true,
     "releaseName": "Release %s",
