@@ -1,5 +1,5 @@
 /*!
- * vue-motion v0.1.4
+ * vue-motion v0.2.0
  * (c) 2017 Eduardo San Martin Morote
  * Released under the MIT License.
  */
@@ -58,6 +58,8 @@ var presets = {
 
 var raf = window.requestAnimationFrame.bind(window);
 var now = performance.now.bind(performance);
+var isArray = Array.isArray.bind(Array);
+var isObject = function (value) { return value !== null && typeof value === 'object'; };
 
 var msPerFrame = 1000 / 60;
 
@@ -111,29 +113,60 @@ var Motion = {
   },
 
   created: function created () {
-    var this$1 = this;
+    var current = this.defineInitialValues(this.realValues, null);
 
-    var values = {};
-    var velocities = {};
-    for (var key in this$1.realValues) {
-      // istanbul ignore if
-      if (!Object.prototype.hasOwnProperty.call(this$1.realValues, key)) { continue }
-      values[key] = this$1.realValues[key];
-      velocities[key] = 0;
-    }
-    this.currentValues = values;
-    this.currentVelocities = velocities;
+    this.currentValues = current.values;
+    this.currentVelocities = current.velocities;
   },
 
   mounted: function mounted () {
     this.prevTime = now();
     this.accumulatedTime = 0;
-    this.idealValues = Object.assign({}, this.currentValues);
-    this.idealVelocities = Object.assign({}, this.currentVelocities);
+
+    var ideal = this.defineInitialValues(this.currentValues, this.currentVelocities);
+
+    this.idealValues = ideal.values;
+    this.idealVelocities = ideal.velocities;
+
     this.animate();
   },
 
   methods: {
+    defineInitialValues: function defineInitialValues (values, velocities) {
+      var newValues = {};
+      var newVelocities = {};
+
+      this.defineValues(values, velocities, newValues, newVelocities);
+
+      return { values: newValues, velocities: newVelocities }
+    },
+
+    defineValues: function defineValues (values, velocities, newValues, newVelocities) {
+      var this$1 = this;
+
+      for (var key in values) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(values, key)) { continue }
+
+        if (isArray(values[key]) || isObject(values[key])) {
+          newValues[key] = {};
+          newVelocities[key] = {};
+
+          this$1.defineValues(
+            values[key],
+            velocities && velocities[key],
+            newValues[key],
+            newVelocities[key]
+          );
+
+          continue
+        }
+
+        newValues[key] = values[key];
+        newVelocities[key] = velocities ? velocities[key] : 0;
+      }
+    },
+
     animate: function animate () {
       var this$1 = this;
 
@@ -176,50 +209,18 @@ var Motion = {
         var currentFrameCompletion =
           (this$1.accumulatedTime - Math.floor(this$1.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame;
         var framesToCatchUp = Math.floor(this$1.accumulatedTime / msPerFrame);
+        var springConfig = this$1.springConfig;
 
-        for (var key in this$1.realValues) {
-          // istanbul ignore if
-          if (!Object.prototype.hasOwnProperty.call(this$1.realValues, key)) { continue }
-          var newIdealValue = this$1.idealValues[key];
-          var newIdealVelocity = this$1.idealVelocities[key];
-          var value = this$1.realValues[key];
-          var springConfig = this$1.springConfig;
-
-          // iterate as if the animation took place
-          for (var i = 0; i < framesToCatchUp; i++) {
-            var assign;
-            (assign = stepper(
-              msPerFrame / 1000,
-              newIdealValue,
-              newIdealVelocity,
-              value,
-              springConfig.stiffness,
-              springConfig.damping,
-              springConfig.precision
-            ), newIdealValue = assign[0], newIdealVelocity = assign[1]);
-          }
-
-          var ref = stepper(
-            msPerFrame / 1000,
-            newIdealValue,
-            newIdealVelocity,
-            value,
-            springConfig.stiffness,
-            springConfig.damping,
-            springConfig.precision
-          );
-          var nextIdealValue = ref[0];
-          var nextIdealVelocity = ref[1];
-
-          this$1.currentValues[key] =
-            newIdealValue +
-            (nextIdealValue - newIdealValue) * currentFrameCompletion;
-          this$1.currentVelocities[key] =
-            newIdealVelocity +
-            (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion;
-          this$1.idealValues[key] = newIdealValue;
-          this$1.idealVelocities[key] = newIdealVelocity;
-        }
+        this$1.animateValues({
+          framesToCatchUp: framesToCatchUp,
+          currentFrameCompletion: currentFrameCompletion,
+          springConfig: springConfig,
+          realValues: this$1.realValues,
+          currentValues: this$1.currentValues,
+          currentVelocities: this$1.currentVelocities,
+          idealValues: this$1.idealValues,
+          idealVelocities: this$1.idealVelocities,
+        });
 
         // out of the update loop
         this$1.animationID = null;
@@ -230,6 +231,78 @@ var Motion = {
         this$1.animate();
       });
     },
+
+    animateValues: function animateValues (ref) {
+      var this$1 = this;
+      var framesToCatchUp = ref.framesToCatchUp;
+      var currentFrameCompletion = ref.currentFrameCompletion;
+      var springConfig = ref.springConfig;
+      var realValues = ref.realValues;
+      var currentValues = ref.currentValues;
+      var currentVelocities = ref.currentVelocities;
+      var idealValues = ref.idealValues;
+      var idealVelocities = ref.idealVelocities;
+
+      for (var key in realValues) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(realValues, key)) { continue }
+
+        if (isArray(realValues[key]) || isObject(realValues[key])) {
+          this$1.animateValues({
+            framesToCatchUp: framesToCatchUp,
+            currentFrameCompletion: currentFrameCompletion,
+            springConfig: springConfig,
+            realValues: realValues[key],
+            currentValues: currentValues[key],
+            currentVelocities: currentVelocities[key],
+            idealValues: idealValues[key],
+            idealVelocities: idealVelocities[key],
+          });
+
+          // nothing to animate
+          continue
+        }
+
+        var newIdealValue = idealValues[key];
+        var newIdealVelocity = idealVelocities[key];
+        var value = realValues[key];
+
+        // iterate as if the animation took place
+        for (var i = 0; i < framesToCatchUp; i++) {
+          var assign;
+          (assign = stepper(
+            msPerFrame / 1000,
+            newIdealValue,
+            newIdealVelocity,
+            value,
+            springConfig.stiffness,
+            springConfig.damping,
+            springConfig.precision
+          ), newIdealValue = assign[0], newIdealVelocity = assign[1]);
+        }
+
+        var ref$1 = stepper(
+          msPerFrame / 1000,
+          newIdealValue,
+          newIdealVelocity,
+          value,
+          springConfig.stiffness,
+          springConfig.damping,
+          springConfig.precision
+        );
+        var nextIdealValue = ref$1[0];
+        var nextIdealVelocity = ref$1[1];
+
+        currentValues[key] =
+          newIdealValue +
+          (nextIdealValue - newIdealValue) * currentFrameCompletion;
+        currentVelocities[key] =
+          newIdealVelocity +
+          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion;
+        idealValues[key] = newIdealValue;
+        idealVelocities[key] = newIdealVelocity;
+      }
+    },
   },
 };
 
@@ -237,6 +310,17 @@ function shouldStopAnimation (currentValues, values, currentVelocities) {
   for (var key in values) {
     // istanbul ignore if
     if (!Object.prototype.hasOwnProperty.call(values, key)) { continue }
+
+    if (isArray(values[key]) || isObject(values[key])) {
+      if (!shouldStopAnimation(
+        currentValues[key],
+        values[key],
+        currentVelocities[key])) {
+        return false
+      }
+      // skip the other checks
+      continue
+    }
 
     if (currentVelocities[key] !== 0) { return false }
 
@@ -257,6 +341,9 @@ if (typeof window !== 'undefined' && window.Vue) {
   window.Vue.use(plugin);
 }
 
-var version = '0.1.4';
+// Allow doing VueMotion.presets.custom = ...
+plugin.presets = presets;
 
-export { Motion, version };export default plugin;
+var version = '0.2.0';
+
+export { Motion, version, presets };export default plugin;

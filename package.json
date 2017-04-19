@@ -1,6 +1,6 @@
 {
   "name": "vue-motion",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Easy and natural state transitions",
   "author": "Eduardo San Martin Morote <posva13@gmail.com>",
   "main": "dist/vue-motion.common.js",
