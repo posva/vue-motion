@@ -94,7 +94,7 @@ export default {
 
           this.defineValues(
             values[key],
-            velocities ? velocities[key] : null,
+            velocities && velocities[key],
             newValues[key],
             newVelocities[key]
           )
@@ -233,9 +233,14 @@ function shouldStopAnimation (currentValues, values, currentVelocities) {
     if (!Object.prototype.hasOwnProperty.call(values, key)) continue
 
     if (isArray(values[key]) || isObject(values[key])) {
-      if (shouldStopAnimation(currentValues[key], values[key], currentVelocities[key])) {
-        return true
+      if (!shouldStopAnimation(
+        currentValues[key],
+        values[key],
+        currentVelocities[key])) {
+        return false
       }
+      // skip the other checks
+      continue
     }
 
     if (currentVelocities[key] !== 0) return false
