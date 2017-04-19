@@ -18,13 +18,13 @@
     "docs:dev": "npm-run-parallel docs:build docs:serve",
     "docs:build": "cd docs && vue build src/App.vue",
     "docs:serve": "docute docs",
+    "docs:release": "yon docs && git add docs/dist && git commit -m '📦 Bundle docs Demo'",
     "lint": "eslint --ext js --ext jsx --ext vue src test/**/*.spec.js test/*.js test/helpers docs/src build",
     "lint:fix": "yon run lint -- --fix",
     "lint:staged": "lint-staged",
     "pretest": "yon run lint",
     "test": "cross-env BABEL_ENV=test karma start test/karma.conf.js --single-run",
-    "dev": "cross-env BABEL_ENV=test karma start test/karma.conf.js",
-    "release:docs": "yon docs && git add docs/dist && git commit -m '📦 Bundle docs Demo'"
+    "dev": "cross-env BABEL_ENV=test karma start test/karma.conf.js"
   },
   "lint-staged": {
     "*.{vue,jsx,js}": [
