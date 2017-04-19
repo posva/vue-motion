@@ -15,7 +15,7 @@
               class="container"
               :sizes="sizes"
               :current="current"
-              :style="{ width: `${resizes.width}px`, height: `${resizes.height}px` }"
+              :style="{ width: `${resizes.layout.width}px`, height: `${resizes.layout.height}px` }"
           >
             <template scope="pcProps">
               <div class="photos"
@@ -24,7 +24,7 @@
                 <img v-for="(photo, i) in photos"
                      class="photo"
                      @touchstart="next"
-                     :style="{ width: `${resizes['w' + i]}px`, height: `${resizes['h' + i]}px` }"
+                     :style="{ width: `${resizes.pictures[i].width}px`, height: `${resizes.pictures[i].height}px` }"
                      :src="photo.src"/>
               </div>
             </template>
@@ -58,12 +58,14 @@ export default {
     },
     sizesNormalized () {
       return this.sizes.reduce((res, size, i) => {
-        res[`w${i}`] = size.width
-        res[`h${i}`] = size.height
+        res.pictures[i] = size
         return res
       }, {
-        width: this.photos[this.current].width,
-        height: this.photos[this.current].height,
+        layout: {
+          width: this.photos[this.current].width,
+          height: this.photos[this.current].height,
+        },
+        pictures: [],
       })
     },
     photos () {

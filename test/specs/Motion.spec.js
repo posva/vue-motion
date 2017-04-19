@@ -1,6 +1,10 @@
 import MotionInjector from 'inject-loader!src/Motion'
 import presets from 'src/presets'
 import {
+  isArray,
+  isObject,
+} from 'src/utils'
+import {
   createVM,
   nextTick,
 } from '../helpers'
@@ -35,6 +39,8 @@ describe('Motion', function () {
       './utils': {
         raf: this.raf,
         now: this.now,
+        isArray,
+        isObject,
       },
     }).default
   })
@@ -169,6 +175,40 @@ describe('Motion', function () {
     vm.$refs.motion.springConfig.should.eql(presets.noWobble)
   })
 
+  it('supports array syntax', function (done) {
+    const vm = createVM(this, `
+<Motion :values="values" :spring="config">
+  <template scope="values">
+    <span class="a">{{ values[0] }}</span>
+    <span class="b">{{ values[1] }}</span>
+  </template>
+</Motion>
+`, {
+  data: {
+    values: [0, -10],
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('.a').should.have.text('0')
+    vm.values[0] = 10
+    nextTick().then(() => {
+      this.step()
+      vm.values[1] = 0
+    }).then(() => {
+      vm.$('.a').should.have.text('0.4722222222222222')
+      this.step()
+    }).then(() => {
+      vm.$('.a').should.have.text('1.1897376543209877')
+      vm.$('.b').should.have.text('-9.527777777777779')
+      this.stepUntil(() => vm.$('.a').text === '10')
+    }).then(done)
+  })
+
   it('supports object syntax', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
@@ -203,6 +243,156 @@ describe('Motion', function () {
       vm.$('.a').should.have.text('1.1897376543209877')
       vm.$('.b').should.have.text('-9.527777777777779')
       this.stepUntil(() => vm.$('.a').text === '10')
+    }).then(done)
+  })
+
+  it('supports nested arrays', function (done) {
+    const vm = createVM(this, `
+<Motion :values="values" :spring="config">
+  <template scope="values">
+    <span class="v00">{{ values[0][0] }}</span>
+    <span class="v01">{{ values[0][1] }}</span>
+    <span class="v10">{{ values[1][0] }}</span>
+    <span class="v11">{{ values[1][1] }}</span>
+  </template>
+</Motion>
+`, {
+  data: {
+    values: [[0, -10], [-10, 0]],
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('.v00').should.have.text('0')
+    vm.values[0][0] = 10
+    nextTick().then(() => {
+      this.step()
+      vm.values[1][0] = 0
+    }).then(() => {
+      vm.$('.v00').should.have.text('0.4722222222222222')
+      this.step()
+    }).then(() => {
+      vm.$('.v00').should.have.text('1.1897376543209877')
+      vm.$('.v10').should.have.text('-9.527777777777779')
+      this.stepUntil(() => vm.$('.v00').text === '10')
+    }).then(done)
+  })
+
+  it('supports nested objects', function (done) {
+    const vm = createVM(this, `
+<Motion :values="values" :spring="config">
+  <template scope="values">
+    <span class="vaa">{{ values.a.a }}</span>
+    <span class="vab">{{ values.a.b }}</span>
+    <span class="vba">{{ values.b.a }}</span>
+    <span class="vbb">{{ values.b.b }}</span>
+  </template>
+</Motion>
+`, {
+  data: {
+    values: {
+      a: { a: 0, b: -10 },
+      b: { a: -10, b: 0 },
+    },
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('.vaa').should.have.text('0')
+    vm.values.a.a = 10
+    nextTick().then(() => {
+      this.step()
+      vm.values.b.a = 0
+    }).then(() => {
+      vm.$('.vaa').should.have.text('0.4722222222222222')
+      this.step()
+    }).then(() => {
+      vm.$('.vaa').should.have.text('1.1897376543209877')
+      vm.$('.vba').should.have.text('-9.527777777777779')
+      this.stepUntil(() => vm.$('.vaa').text === '10')
+    }).then(done)
+  })
+
+  it('supports nested objects in arrays', function (done) {
+    const vm = createVM(this, `
+<Motion :values="values" :spring="config">
+  <template scope="values">
+    <span class="v0a">{{ values[0].a }}</span>
+    <span class="v0b">{{ values[0].b }}</span>
+    <span class="v1a">{{ values[1].a }}</span>
+    <span class="v1b">{{ values[1].b }}</span>
+  </template>
+</Motion>
+`, {
+  data: {
+    values: [{ a: 0, b: -10 }, { a: -10, b: 0 }],
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('.v0a').should.have.text('0')
+    vm.values[0].a = 10
+    nextTick().then(() => {
+      this.step()
+      vm.values[1].a = 0
+    }).then(() => {
+      vm.$('.v0a').should.have.text('0.4722222222222222')
+      this.step()
+    }).then(() => {
+      vm.$('.v0a').should.have.text('1.1897376543209877')
+      vm.$('.v1a').should.have.text('-9.527777777777779')
+      this.stepUntil(() => vm.$('.v0a').text === '10')
+    }).then(done)
+  })
+
+  it('supports nested arrays in objects', function (done) {
+    const vm = createVM(this, `
+<Motion :values="values" :spring="config">
+  <template scope="values">
+    <span class="va0">{{ values.a[0] }}</span>
+    <span class="va1">{{ values.a[1] }}</span>
+    <span class="vb0">{{ values.b[0] }}</span>
+    <span class="vb1">{{ values.b[1] }}</span>
+  </template>
+</Motion>
+`, {
+  data: {
+    values: {
+      a: [0, -10],
+      b: [-10, 0],
+    },
+    config: {
+      stiffness: 170,
+      damping: 26,
+      precision: 0.01,
+    },
+  },
+  components: { Motion },
+})
+    vm.$('.va0').should.have.text('0')
+    vm.values.a[0] = 10
+    nextTick().then(() => {
+      this.step()
+      vm.values.b[0] = 0
+    }).then(() => {
+      vm.$('.va0').should.have.text('0.4722222222222222')
+      this.step()
+    }).then(() => {
+      vm.$('.va0').should.have.text('1.1897376543209877')
+      vm.$('.vb0').should.have.text('-9.527777777777779')
+      this.stepUntil(() => vm.$('.va0').text === '10')
     }).then(done)
   })
 })

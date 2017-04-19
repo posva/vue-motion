@@ -1,6 +1,6 @@
 import stepper from './stepper'
 import presets from './presets'
-import { raf, now } from './utils'
+import { raf, now, isArray, isObject } from './utils'
 
 const msPerFrame = 1000 / 60
 
@@ -55,27 +55,58 @@ export default {
   },
 
   created () {
-    const values = {}
-    const velocities = {}
-    for (const key in this.realValues) {
-      // istanbul ignore if
-      if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
-      values[key] = this.realValues[key]
-      velocities[key] = 0
-    }
-    this.currentValues = values
-    this.currentVelocities = velocities
+    const current = this.defineInitialValues(this.realValues, null)
+
+    this.currentValues = current.values
+    this.currentVelocities = current.velocities
   },
 
   mounted () {
     this.prevTime = now()
     this.accumulatedTime = 0
-    this.idealValues = { ...this.currentValues }
-    this.idealVelocities = { ...this.currentVelocities }
+
+    const ideal = this.defineInitialValues(this.currentValues, this.currentVelocities)
+
+    this.idealValues = ideal.values
+    this.idealVelocities = ideal.velocities
+
     this.animate()
   },
 
   methods: {
+    defineInitialValues (values, velocities) {
+      const newValues = {}
+      const newVelocities = {}
+
+      this.defineValues(values, velocities, newValues, newVelocities)
+
+      return { values: newValues, velocities: newVelocities }
+    },
+
+    defineValues (values, velocities, newValues, newVelocities) {
+      for (const key in values) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(values, key)) continue
+
+        if (isArray(values[key]) || isObject(values[key])) {
+          newValues[key] = {}
+          newVelocities[key] = {}
+
+          this.defineValues(
+            values[key],
+            velocities && velocities[key],
+            newValues[key],
+            newVelocities[key]
+          )
+
+          continue
+        }
+
+        newValues[key] = values[key]
+        newVelocities[key] = velocities ? velocities[key] : 0
+      }
+    },
+
     animate () {
       this.animationId = raf(() => {
         if (shouldStopAnimation(
@@ -116,47 +147,18 @@ export default {
         const currentFrameCompletion =
           (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
+        const springConfig = this.springConfig
 
-        for (const key in this.realValues) {
-          // istanbul ignore if
-          if (!Object.prototype.hasOwnProperty.call(this.realValues, key)) continue
-          let newIdealValue = this.idealValues[key]
-          let newIdealVelocity = this.idealVelocities[key]
-          const value = this.realValues[key]
-          const springConfig = this.springConfig
-
-          // iterate as if the animation took place
-          for (let i = 0; i < framesToCatchUp; i++) {
-            ;[newIdealValue, newIdealVelocity] = stepper(
-              msPerFrame / 1000,
-              newIdealValue,
-              newIdealVelocity,
-              value,
-              springConfig.stiffness,
-              springConfig.damping,
-              springConfig.precision
-            )
-          }
-
-          const [nextIdealValue, nextIdealVelocity] = stepper(
-            msPerFrame / 1000,
-            newIdealValue,
-            newIdealVelocity,
-            value,
-            springConfig.stiffness,
-            springConfig.damping,
-            springConfig.precision
-          )
-
-          this.currentValues[key] =
-            newIdealValue +
-            (nextIdealValue - newIdealValue) * currentFrameCompletion
-          this.currentVelocities[key] =
-            newIdealVelocity +
-            (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
-          this.idealValues[key] = newIdealValue
-          this.idealVelocities[key] = newIdealVelocity
-        }
+        this.animateValues({
+          framesToCatchUp,
+          currentFrameCompletion,
+          springConfig,
+          realValues: this.realValues,
+          currentValues: this.currentValues,
+          currentVelocities: this.currentVelocities,
+          idealValues: this.idealValues,
+          idealVelocities: this.idealVelocities,
+        })
 
         // out of the update loop
         this.animationID = null
@@ -167,6 +169,74 @@ export default {
         this.animate()
       })
     },
+
+    animateValues ({
+      framesToCatchUp,
+      currentFrameCompletion,
+      springConfig,
+      realValues,
+      currentValues,
+      currentVelocities,
+      idealValues,
+      idealVelocities,
+    }) {
+      for (const key in realValues) {
+        // istanbul ignore if
+        if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
+
+        if (isArray(realValues[key]) || isObject(realValues[key])) {
+          this.animateValues({
+            framesToCatchUp,
+            currentFrameCompletion,
+            springConfig,
+            realValues: realValues[key],
+            currentValues: currentValues[key],
+            currentVelocities: currentVelocities[key],
+            idealValues: idealValues[key],
+            idealVelocities: idealVelocities[key],
+          })
+
+          // nothing to animate
+          continue
+        }
+
+        let newIdealValue = idealValues[key]
+        let newIdealVelocity = idealVelocities[key]
+        const value = realValues[key]
+
+        // iterate as if the animation took place
+        for (let i = 0; i < framesToCatchUp; i++) {
+          ;[newIdealValue, newIdealVelocity] = stepper(
+            msPerFrame / 1000,
+            newIdealValue,
+            newIdealVelocity,
+            value,
+            springConfig.stiffness,
+            springConfig.damping,
+            springConfig.precision
+          )
+        }
+
+        const [nextIdealValue, nextIdealVelocity] = stepper(
+          msPerFrame / 1000,
+          newIdealValue,
+          newIdealVelocity,
+          value,
+          springConfig.stiffness,
+          springConfig.damping,
+          springConfig.precision
+        )
+
+        currentValues[key] =
+          newIdealValue +
+          (nextIdealValue - newIdealValue) * currentFrameCompletion
+        currentVelocities[key] =
+          newIdealVelocity +
+          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
+        idealValues[key] = newIdealValue
+        idealVelocities[key] = newIdealVelocity
+      }
+    },
   },
 }
 
@@ -174,6 +244,17 @@ function shouldStopAnimation (currentValues, values, currentVelocities) {
   for (const key in values) {
     // istanbul ignore if
     if (!Object.prototype.hasOwnProperty.call(values, key)) continue
+
+    if (isArray(values[key]) || isObject(values[key])) {
+      if (!shouldStopAnimation(
+        currentValues[key],
+        values[key],
+        currentVelocities[key])) {
+        return false
+      }
+      // skip the other checks
+      continue
+    }
 
     if (currentVelocities[key] !== 0) return false
 
