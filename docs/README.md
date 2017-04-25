@@ -88,6 +88,33 @@ the transitioning values in the scope with the original keys.
 </Motion>
 ```
 
+You can nest objects and arrays:
+
+```js
+// Given an array of sizes:
+data () {
+  return {
+    sizes: [
+      { width: 100, height: 200 },
+      { width: 200, height: 70 },
+      { width: 120, height: 170 },
+    ]
+  }
+}
+```
+
+Same usage 😉
+
+```html
+<Motion :values="sizes">
+  <template scope="_sizes">
+    <div v-for="size in _sizes"
+         :style="{ width: size.width, height: size.height }"></div>
+  </template>
+</Motion>
+```
+
+
 #### Props
 
 |Name|Type|Required|Default|Comments|
