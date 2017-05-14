@@ -24,10 +24,6 @@ export default {
     },
   },
 
-  created () {
-    console.log('hey')
-  },
-
   components: { Motion },
 }
 </script>
