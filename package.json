@@ -78,6 +78,7 @@
     "rollup-plugin-vue": "^2.4.0",
     "sinon": "^2.2.0",
     "sinon-chai": "^2.10.0",
+    "uglify-js": "^3.0.4",
     "uppercamelcase": "^3.0.0",
     "vue": "^2.3.3",
     "vue-loader": "^12.0.4",
