@@ -7,6 +7,10 @@ numerical values. This allows you to create smooth animations that feels natural
 and that automatically adapt to its target value. These kind of _animations_ can
 help with **fluid** interfaces.
 
+## Why do I need this?
+
+You may think you got covered by using Vue `transition` with CSS transitions, there's one big problem about CSS transition, and more specifically about using easing functions: interrupting a transition in the middle to play a different one makes the animation look floppy and unnatural. This is is because every easing requires you to define **how long a transition** takes. **Vue Motion doesn't**, let the transition takes the time it needs but control how it should behave!
+
 ## Installation
 
 You can install Vue Motion as any other plugin:
