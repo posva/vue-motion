@@ -97,8 +97,5 @@
     "url": "https://github.com/posva/vue-motion/issues"
   },
   "homepage": "https://github.com/posva/vue-motion#readme",
-  "license": {
-    "type": "MIT",
-    "url": "http://www.opensource.org/licenses/mit-license.php"
-  }
+  "license": "MIT"
 }
