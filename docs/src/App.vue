@@ -5,7 +5,6 @@
 
     <VueLogo/>
 
-
     <section>
       <Tabs v-model="currentTab">
         <Tab :index="0">Playground</Tab>
@@ -53,8 +52,8 @@ export default {
 
   computed: {
     tabsPositions () {
-      this.currentTab
-      if (!this.$el) {
+      // always track currentTab as this.$el may change
+      if (!this.$el || this.currentTab >= -1) {
         return {
           first: 0,
           second: 0,

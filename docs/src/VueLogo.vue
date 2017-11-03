@@ -1,8 +1,9 @@
 <template>
-  <Motion tag="div"
-          :values="values"
-          :spring="spring"
-          @motion-end="end"
+  <Motion
+      tag="div"
+      :values="values"
+      :spring="spring"
+      @motion-end="end"
   >
     <template scope="props">
       <div class="logo" :style="style(props.x)">
@@ -41,8 +42,8 @@ export default {
       this.timer = setTimeout(() => {
         this.timer = null
         this.rotated = this.rotated === 0
-                     ? 180
-                     : 0
+          ? 180
+          : 0
       }, 10000)
     },
 
@@ -53,8 +54,8 @@ export default {
     style (x) {
       return {
         overflow: Math.abs(x) > 10
-                ? 'hidden'
-                : 'initial',
+          ? 'hidden'
+          : 'initial',
       }
     },
   },

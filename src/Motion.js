@@ -206,7 +206,7 @@ export default {
 
         // iterate as if the animation took place
         for (let i = 0; i < framesToCatchUp; i++) {
-          ;[newIdealValue, newIdealVelocity] = stepper(
+          [newIdealValue, newIdealVelocity] = stepper(
             msPerFrame / 1000,
             newIdealValue,
             newIdealVelocity,

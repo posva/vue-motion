@@ -53,16 +53,16 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    n: 0,
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          n: 0,
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('pre').should.have.text('0')
     vm.n = 10
     nextTick().then(() => {
@@ -85,16 +85,16 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    n: 0,
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          n: 0,
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('pre').should.have.text('0')
     vm.n = 10
     nextTick().then(() => {
@@ -119,12 +119,12 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    n: 0,
-    spring: 'noWobble',
-  },
-  components: { Motion },
-})
+        data: {
+          n: 0,
+          spring: 'noWobble',
+        },
+        components: { Motion },
+      })
     vm.$refs.motion.springConfig.should.eql(presets.noWobble)
     vm.spring = 'gentle'
     nextTick().then(() => {
@@ -146,12 +146,12 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    n: 0,
-    spring: 'noWobble',
-  },
-  components: { Motion },
-})
+        data: {
+          n: 0,
+          spring: 'noWobble',
+        },
+        components: { Motion },
+      })
     vm.$refs.motion.springConfig.should.eql(presets.noWobble)
     vm.spring = 'custom'
     nextTick().then(() => {
@@ -169,9 +169,9 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: { n: 0 },
-  components: { Motion },
-})
+        data: { n: 0 },
+        components: { Motion },
+      })
     vm.$refs.motion.springConfig.should.eql(presets.noWobble)
   })
 
@@ -184,16 +184,16 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    values: [0, -10],
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          values: [0, -10],
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('.a').should.have.text('0')
     vm.values[0] = 10
     nextTick().then(() => {
@@ -218,19 +218,19 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    values: {
-      a: 0,
-      b: -10,
-    },
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          values: {
+            a: 0,
+            b: -10,
+          },
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('.a').should.have.text('0')
     vm.values.a = 10
     nextTick().then(() => {
@@ -257,16 +257,16 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    values: [[0, -10], [-10, 0]],
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          values: [[0, -10], [-10, 0]],
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('.v00').should.have.text('0')
     vm.values[0][0] = 10
     nextTick().then(() => {
@@ -293,19 +293,19 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    values: {
-      a: { a: 0, b: -10 },
-      b: { a: -10, b: 0 },
-    },
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          values: {
+            a: { a: 0, b: -10 },
+            b: { a: -10, b: 0 },
+          },
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('.vaa').should.have.text('0')
     vm.values.a.a = 10
     nextTick().then(() => {
@@ -332,16 +332,16 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    values: [{ a: 0, b: -10 }, { a: -10, b: 0 }],
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          values: [{ a: 0, b: -10 }, { a: -10, b: 0 }],
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('.v0a').should.have.text('0')
     vm.values[0].a = 10
     nextTick().then(() => {
@@ -368,19 +368,19 @@ describe('Motion', function () {
   </template>
 </Motion>
 `, {
-  data: {
-    values: {
-      a: [0, -10],
-      b: [-10, 0],
-    },
-    config: {
-      stiffness: 170,
-      damping: 26,
-      precision: 0.01,
-    },
-  },
-  components: { Motion },
-})
+        data: {
+          values: {
+            a: [0, -10],
+            b: [-10, 0],
+          },
+          config: {
+            stiffness: 170,
+            damping: 26,
+            precision: 0.01,
+          },
+        },
+        components: { Motion },
+      })
     vm.$('.va0').should.have.text('0')
     vm.values.a[0] = 10
     nextTick().then(() => {

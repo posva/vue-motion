@@ -1,17 +1,19 @@
 <template>
   <div>
-    <Motion :value="n"
-            :spring="config"
-            @motion-start="start"
-            @motion-end="end"
-            @motion-restart="restart"
+    <Motion
+        :value="n"
+        :spring="config"
+        @motion-start="start"
+        @motion-end="end"
+        @motion-restart="restart"
     >
       <template scope="values">
         <span>Value is</span>
         <pre>{{ values }}</pre>
         <div class="demo-container">
-          <div class="demo"
-               :style="{transform: `translate3d(${values.value}px, 0, 0)`}"
+          <div
+              class="demo"
+              :style="{transform: `translate3d(${values.value}px, 0, 0)`}"
           ></div>
         </div>
       </template>
@@ -72,8 +74,8 @@ export default {
   methods: {
     toggle () {
       this.n = this.n < this.max / 2
-             ? this.max
-             : 0
+        ? this.max
+        : 0
     },
     setSpring (config) {
       this.config = config

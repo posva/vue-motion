@@ -5,7 +5,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.jsx'],
     alias: {
-      'src': resolve(__dirname, '../src'),
+      src: resolve(__dirname, '../src'),
     },
   },
   module: {
