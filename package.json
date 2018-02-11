@@ -35,7 +35,6 @@
   "pre-commit": "lint:staged",
   "devDependencies": {
     "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
     "babel-helper-vue-jsx-merge-props": "^2.0.2",
     "babel-loader": "^7.1.1",
     "babel-plugin-istanbul": "^4.1.4",
@@ -44,8 +43,6 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-plugin-transform-vue-jsx": "^3.5.0",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
     "buble": "^0.15.2",
     "chai": "^4.1.0",
     "chai-dom": "^1.5.0",
