@@ -46,7 +46,6 @@
     "buble": "^0.15.2",
     "chai": "^4.1.0",
     "chai-dom": "^1.5.0",
-    "codecov": "^3.0.0",
     "cross-env": "^5.0.1",
     "eslint": "^4.3.0",
     "eslint-config-posva": "^1.0.0",
