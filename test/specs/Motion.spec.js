@@ -48,7 +48,7 @@ describe('Motion', function () {
   it('works with perfect time', function (done) {
     const vm = createVM(this, `
 <Motion :value="n" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <pre>{{ values.value }}</pre>
   </template>
 </Motion>
@@ -80,7 +80,7 @@ describe('Motion', function () {
     this.timeSlowdown = 11
     const vm = createVM(this, `
 <Motion :value="n" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <pre>{{ values.value }}</pre>
   </template>
 </Motion>
@@ -114,7 +114,7 @@ describe('Motion', function () {
   it('accepts a string as the spring', function (done) {
     const vm = createVM(this, `
 <Motion ref="motion" :value="n" :spring="spring">
-  <template scope="values">
+  <template slot-scope="values">
     <pre>{{ values.value }}</pre>
   </template>
 </Motion>
@@ -141,7 +141,7 @@ describe('Motion', function () {
 
     const vm = createVM(this, `
 <Motion ref="motion" :value="n" :spring="spring">
-  <template scope="values">
+  <template slot-scope="values">
     <pre>{{ values.value }}</pre>
   </template>
 </Motion>
@@ -164,7 +164,7 @@ describe('Motion', function () {
   it('uses noWobble by default as the spring', function () {
     const vm = createVM(this, `
 <Motion ref="motion" :value="n">
-  <template scope="values">
+  <template slot-scope="values">
     <pre>{{ values.value }}</pre>
   </template>
 </Motion>
@@ -178,7 +178,7 @@ describe('Motion', function () {
   it('supports array syntax', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <span class="a">{{ values[0] }}</span>
     <span class="b">{{ values[1] }}</span>
   </template>
@@ -212,7 +212,7 @@ describe('Motion', function () {
   it('supports object syntax', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <span class="a">{{ values.a }}</span>
     <span class="b">{{ values.b }}</span>
   </template>
@@ -249,7 +249,7 @@ describe('Motion', function () {
   it('supports nested arrays', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <span class="v00">{{ values[0][0] }}</span>
     <span class="v01">{{ values[0][1] }}</span>
     <span class="v10">{{ values[1][0] }}</span>
@@ -285,7 +285,7 @@ describe('Motion', function () {
   it('supports nested objects', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <span class="vaa">{{ values.a.a }}</span>
     <span class="vab">{{ values.a.b }}</span>
     <span class="vba">{{ values.b.a }}</span>
@@ -324,7 +324,7 @@ describe('Motion', function () {
   it('supports nested objects in arrays', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <span class="v0a">{{ values[0].a }}</span>
     <span class="v0b">{{ values[0].b }}</span>
     <span class="v1a">{{ values[1].a }}</span>
@@ -360,7 +360,7 @@ describe('Motion', function () {
   it('supports nested arrays in objects', function (done) {
     const vm = createVM(this, `
 <Motion :values="values" :spring="config">
-  <template scope="values">
+  <template slot-scope="values">
     <span class="va0">{{ values.a[0] }}</span>
     <span class="va1">{{ values.a[1] }}</span>
     <span class="vb0">{{ values.b[0] }}</span>
