@@ -21,3 +21,5 @@ labels:
     color: ffffff
   - name: need repro
     color: c9581c
+  - name: feature request
+    color: fbca04
