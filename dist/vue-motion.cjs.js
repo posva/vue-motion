@@ -1,5 +1,5 @@
 /**
- * vue-motion v0.2.0
+ * vue-motion v0.2.2
  * (c) 2018 Eduardo San Martin Morote <posva13@gmail.com>
  * @license MIT
  */
@@ -352,7 +352,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 // Allow doing VueMotion.presets.custom = ...
 plugin.presets = presets;
 
-var version = '0.2.0';
+var version = '0.2.2';
 
 exports['default'] = plugin;
 exports.Motion = Motion;
