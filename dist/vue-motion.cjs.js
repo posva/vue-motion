@@ -1,8 +1,12 @@
-/*!
+/**
  * vue-motion v0.2.0
- * (c) 2017 Eduardo San Martin Morote
- * Released under the MIT License.
+ * (c) 2018 Eduardo San Martin Morote <posva13@gmail.com>
+ * @license MIT
  */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 /* @flow */
 
@@ -56,8 +60,12 @@ var presets = {
   stiff: { stiffness: 210, damping: 20, precision: 0.01 },
 };
 
-var raf = window.requestAnimationFrame.bind(window);
-var now = performance.now.bind(performance);
+var raf = typeof window !== 'undefined'
+  ? window.requestAnimationFrame.bind(window)
+  : function (_) {};
+var now = typeof performance !== 'undefined'
+  ? performance.now.bind(performance)
+  : Date.now.bind(Date);
 var isArray = Array.isArray.bind(Array);
 var isObject = function (value) { return value !== null && typeof value === 'object'; };
 
@@ -346,4 +354,7 @@ plugin.presets = presets;
 
 var version = '0.2.0';
 
-export { Motion, version, presets };export default plugin;
+exports['default'] = plugin;
+exports.Motion = Motion;
+exports.version = version;
+exports.presets = presets;

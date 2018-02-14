@@ -2,8 +2,11 @@
   "name": "vue-motion",
   "version": "0.2.0",
   "description": "Easy and natural state transitions",
-  "author": "Eduardo San Martin Morote <posva13@gmail.com>",
-  "main": "dist/vue-motion.common.js",
+  "author": {
+    "name": "Eduardo San Martin Morote",
+    "email": "posva13@gmail.com"
+  },
+  "main": "dist/vue-motion.cjs.js",
   "browser": "dist/vue-motion.js",
   "unpkg": "dist/vue-motion.js",
   "files": [
@@ -11,8 +14,7 @@
     "src"
   ],
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "node build/build.js",
+    "build": "rollit",
     "predocs": "cd docs && rimraf dist",
     "docs": "cd docs && vue build src/App.vue --lib Landing --prod",
     "docs:dev": "npm-run-parallel docs:build docs:serve",
@@ -93,5 +95,6 @@
     "url": "https://github.com/posva/vue-motion/issues"
   },
   "homepage": "https://github.com/posva/vue-motion#readme",
-  "license": "MIT"
+  "license": "MIT",
+  "module": "dist/vue-motion.es.js"
 }
