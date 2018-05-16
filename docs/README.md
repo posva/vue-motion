@@ -63,10 +63,8 @@ When transitioning a single value, pass it down with the `value` prop. You then
 get access to the transitioning value in the scope with that same key: `value`.
 
 ```html
-<Motion :value="offset">
-  <template scope="props">
-    <div :style="{ transform: `translateX(${props.value}px)` }"></div>
-  </template>
+<Motion :value="offset" tag="div">
+  <div slot-scope="props" :style="{ transform: `translateX(${props.value}px)` }"></div>
 </Motion>
 ```
 
@@ -86,9 +84,7 @@ the transitioning values in the scope with the original keys.
 
 ```html
 <Motion :values="size">
-  <template scope="_size">
-    <div :style="{ width: _size.width, height: _size.height }"></div>
-  </template>
+  <div slot-scope="_size" :style="{ width: _size.width, height: _size.height }"></div>
 </Motion>
 ```
 
@@ -111,10 +107,7 @@ Same usage 😉
 
 ```html
 <Motion :values="sizes">
-  <template scope="_sizes">
-    <div v-for="size in _sizes"
-         :style="{ width: size.width, height: size.height }"></div>
-  </template>
+  <div v-for="size in _sizes" slot-scope="_sizes" :style="{ width: size.width, height: size.height }"></div>
 </Motion>
 ```
 
