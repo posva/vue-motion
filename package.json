@@ -1,13 +1,13 @@
 {
   "name": "vue-motion",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Easy and natural state transitions",
   "author": {
     "name": "Eduardo San Martin Morote",
     "email": "posva13@gmail.com"
   },
   "main": "dist/vue-motion.cjs.js",
-  "browser": "dist/vue-motion.js",
+  "browser": "dist/vue-motion.es.js",
   "unpkg": "dist/vue-motion.js",
   "files": [
     "dist",

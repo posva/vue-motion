@@ -1,5 +1,5 @@
 /**
- * vue-motion v0.2.2
+ * vue-motion v0.2.3
  * (c) 2018 Eduardo San Martin Morote <posva13@gmail.com>
  * @license MIT
  */
@@ -96,20 +96,15 @@ var Motion = {
 
   computed: {
     springConfig: function springConfig () {
-      return typeof this.spring === 'string'
-        ? presets[this.spring]
-        : this.spring
+      return typeof this.spring === 'string' ? presets[this.spring] : this.spring
     },
     realValues: function realValues () {
-      return this.value != null
-        ? { value: this.value }
-        : this.values
+      return this.value != null ? { value: this.value } : this.values
     },
   },
 
   render: function render (h) {
-    return h(this.tag, [
-      this.$scopedSlots.default(this.currentValues) ])
+    return h(this.tag, [this.$scopedSlots.default(this.currentValues)])
   },
 
   watch: {
@@ -181,11 +176,7 @@ var Motion = {
       var this$1 = this;
 
       this.animationId = raf(function () {
-        if (shouldStopAnimation(
-          this$1.currentValues,
-          this$1.realValues,
-          this$1.currentVelocities
-        )) {
+        if (shouldStopAnimation(this$1.currentValues, this$1.realValues, this$1.currentVelocities)) {
           if (this$1.wasAnimating) { this$1.$emit('motion-end'); }
 
           // reset everything for next animation
@@ -217,7 +208,8 @@ var Motion = {
         }
 
         var currentFrameCompletion =
-          (this$1.accumulatedTime - Math.floor(this$1.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame;
+          (this$1.accumulatedTime - Math.floor(this$1.accumulatedTime / msPerFrame) * msPerFrame) /
+          msPerFrame;
         var framesToCatchUp = Math.floor(this$1.accumulatedTime / msPerFrame);
         var springConfig = this$1.springConfig;
 
@@ -258,6 +250,16 @@ var Motion = {
         if (!Object.prototype.hasOwnProperty.call(realValues, key)) { continue }
 
         if (isArray(realValues[key]) || isObject(realValues[key])) {
+          // the value may have been added
+          if (!idealValues[key]) {
+            var ideal = this$1.defineInitialValues(this$1.realValues[key], null);
+            var current = this$1.defineInitialValues(this$1.realValues[key], null);
+            this$1.$set(idealValues, key, ideal.values);
+            this$1.$set(idealVelocities, key, ideal.velocities);
+            this$1.$set(currentValues, key, current.values);
+            this$1.$set(currentVelocities, key, current.velocities);
+          }
+
           this$1.animateValues({
             framesToCatchUp: framesToCatchUp,
             currentFrameCompletion: currentFrameCompletion,
@@ -304,11 +306,9 @@ var Motion = {
         var nextIdealVelocity = ref$1[1];
 
         currentValues[key] =
-          newIdealValue +
-          (nextIdealValue - newIdealValue) * currentFrameCompletion;
+          newIdealValue + (nextIdealValue - newIdealValue) * currentFrameCompletion;
         currentVelocities[key] =
-          newIdealVelocity +
-          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion;
+          newIdealVelocity + (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion;
         idealValues[key] = newIdealValue;
         idealVelocities[key] = newIdealVelocity;
       }
@@ -322,10 +322,7 @@ function shouldStopAnimation (currentValues, values, currentVelocities) {
     if (!Object.prototype.hasOwnProperty.call(values, key)) { continue }
 
     if (isArray(values[key]) || isObject(values[key])) {
-      if (!shouldStopAnimation(
-        currentValues[key],
-        values[key],
-        currentVelocities[key])) {
+      if (!shouldStopAnimation(currentValues[key], values[key], currentVelocities[key])) {
         return false
       }
       // skip the other checks
@@ -354,7 +351,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 // Allow doing VueMotion.presets.custom = ...
 plugin.presets = presets;
 
-var version = '0.2.2';
+var version = '0.2.3';
 
 exports['default'] = plugin;
 exports.Motion = Motion;
