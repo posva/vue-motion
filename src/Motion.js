@@ -27,21 +27,15 @@ export default {
 
   computed: {
     springConfig () {
-      return typeof this.spring === 'string'
-        ? presets[this.spring]
-        : this.spring
+      return typeof this.spring === 'string' ? presets[this.spring] : this.spring
     },
     realValues () {
-      return this.value != null
-        ? { value: this.value }
-        : this.values
+      return this.value != null ? { value: this.value } : this.values
     },
   },
 
   render (h) {
-    return h(this.tag, [
-      this.$scopedSlots.default(this.currentValues),
-    ])
+    return h(this.tag, [this.$scopedSlots.default(this.currentValues)])
   },
 
   watch: {
@@ -109,11 +103,7 @@ export default {
 
     animate () {
       this.animationId = raf(() => {
-        if (shouldStopAnimation(
-          this.currentValues,
-          this.realValues,
-          this.currentVelocities
-        )) {
+        if (shouldStopAnimation(this.currentValues, this.realValues, this.currentVelocities)) {
           if (this.wasAnimating) this.$emit('motion-end')
 
           // reset everything for next animation
@@ -145,7 +135,8 @@ export default {
         }
 
         const currentFrameCompletion =
-          (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) / msPerFrame
+          (this.accumulatedTime - Math.floor(this.accumulatedTime / msPerFrame) * msPerFrame) /
+          msPerFrame
         const framesToCatchUp = Math.floor(this.accumulatedTime / msPerFrame)
         const springConfig = this.springConfig
 
@@ -185,6 +176,16 @@ export default {
         if (!Object.prototype.hasOwnProperty.call(realValues, key)) continue
 
         if (isArray(realValues[key]) || isObject(realValues[key])) {
+          // the value may have been added
+          if (!idealValues[key]) {
+            const ideal = this.defineInitialValues(this.realValues[key], null)
+            const current = this.defineInitialValues(this.realValues[key], null)
+            this.$set(idealValues, key, ideal.values)
+            this.$set(idealVelocities, key, ideal.velocities)
+            this.$set(currentValues, key, current.values)
+            this.$set(currentVelocities, key, current.velocities)
+          }
+
           this.animateValues({
             framesToCatchUp,
             currentFrameCompletion,
@@ -228,11 +229,9 @@ export default {
         )
 
         currentValues[key] =
-          newIdealValue +
-          (nextIdealValue - newIdealValue) * currentFrameCompletion
+          newIdealValue + (nextIdealValue - newIdealValue) * currentFrameCompletion
         currentVelocities[key] =
-          newIdealVelocity +
-          (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
+          newIdealVelocity + (nextIdealVelocity - newIdealVelocity) * currentFrameCompletion
         idealValues[key] = newIdealValue
         idealVelocities[key] = newIdealVelocity
       }
@@ -246,10 +245,7 @@ function shouldStopAnimation (currentValues, values, currentVelocities) {
     if (!Object.prototype.hasOwnProperty.call(values, key)) continue
 
     if (isArray(values[key]) || isObject(values[key])) {
-      if (!shouldStopAnimation(
-        currentValues[key],
-        values[key],
-        currentVelocities[key])) {
+      if (!shouldStopAnimation(currentValues[key], values[key], currentVelocities[key])) {
         return false
       }
       // skip the other checks
