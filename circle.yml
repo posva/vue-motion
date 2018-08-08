@@ -1,25 +1,33 @@
-general:
-  branches:
-    ignore:
-      - gh-pages
-machine:
-  node:
-    version: 6
-  environment:
-    PATH: "${PATH}:${HOME}/.yarn/bin:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
-dependencies:
-  pre:
-    - |
-      if [[ ! -e ~/.yarn/bin/yarn ]]; then
-        curl -o- -L https://yarnpkg.com/install.sh | bash -s
-      fi
-  cache_directories:
-    - ~/.yarn
-    - ~/.yarn-cache
-  override:
-    - yarn install
-test:
-  override:
-    - yarn test
-  post:
-    - bash <(curl -s https://codecov.io/bash)
+version: 2
+
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "yarn.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+      # run tests!
+      - run: npm test
+
+      - run:
+          name: Send code coverage
+          command: bash <(curl -s https://codecov.io/bash)
